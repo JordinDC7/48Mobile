@@ -1,0 +1,2754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>48 Electric – Ops Suite Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #02040d;
+      --bg-elevated: #050817;
+      --bg-soft: #0b1026;
+      --bg-soft-2: #101633;
+      --accent: #ffb400;
+      --accent-soft: #ffcc4d24;
+      --accent-2: #3fd1ff;
+      --accent-3: #a97bff;
+      --danger: #ff4b6a;
+      --success: #42d689;
+      --warn: #ff934b;
+      --text-main: #f5f6ff;
+      --text-muted: #a3a8d7;
+      --text-soft: #7d82b2;
+      --border-subtle: #282f58;
+      --chip-bg: #111633;
+      --chip-border: #313863;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 22px 45px rgba(0, 0, 0, 0.85);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #1f2758 0, #02040d 52%),
+        radial-gradient(circle at bottom, #050f33 0, #02040d 60%);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* MAIN TAB TOGGLES (BOTTOM NAV) */
+    .tab-toggle {
+      display: none;
+    }
+
+    .app-shell {
+      max-width: 540px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 12px 90px;
+    }
+
+    /* HEADER */
+    .app-header {
+      position: sticky;
+      top: 8px;
+      z-index: 40;
+      padding: 10px 14px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, #101633f0, #181f45f0);
+      border: 1px solid #2f3664;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 20% 0%, #ffecc0, #ffb400 55%, #ff934b 100%);
+      box-shadow:
+        0 0 18px rgba(255, 180, 0, 0.8),
+        0 0 40px rgba(255, 180, 0, 0.5);
+      position: relative;
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 10px;
+      border: 2px solid rgba(37, 19, 0, 0.9);
+      border-top-color: transparent;
+      border-right-color: transparent;
+      transform: rotate(-20deg);
+    }
+
+    .brand-mark::after {
+      inset: 11px 10px 9px 9px;
+      opacity: 0.6;
+    }
+
+    .brand-text-main {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .brand-text-sub {
+      font-size: 0.68rem;
+      color: var(--text-soft);
+    }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+
+    .user-pill {
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: radial-gradient(circle at 0 0, #273269, #0a0f2c);
+      border: 1px solid rgba(126, 142, 255, 0.65);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 12px rgba(66, 214, 137, 1);
+    }
+
+    .header-site {
+      font-size: 0.66rem;
+      color: var(--text-soft);
+    }
+
+    .header-site span {
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+
+    /* MAIN CONTENT */
+    .main-scroll {
+      flex: 1;
+      margin-top: 14px;
+    }
+
+    .panel {
+      display: none;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* SHOW PANELS BASED ON TAB */
+    #tab-console:checked ~ .app-shell .panel-console,
+    #tab-schedule:checked ~ .app-shell .panel-schedule,
+    #tab-jobs:checked ~ .app-shell .panel-jobs,
+    #tab-people:checked ~ .app-shell .panel-people {
+      display: flex;
+    }
+
+    /* HERO (DC CONSOLE TOP) */
+    .hero-banner {
+      padding: 11px 13px;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 0 0, #263270, #050819 58%),
+        linear-gradient(135deg, #050819, #050819);
+      border: 1px solid #313766;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::before {
+      content: "";
+      position: absolute;
+      inset: -45%;
+      background:
+        radial-gradient(circle at 20% -20%, rgba(63, 209, 255, 0.2), transparent 55%),
+        radial-gradient(circle at 120% 0, rgba(255, 180, 0, 0.28), transparent 58%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tag-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .hero-chip {
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: rgba(6, 13, 42, 0.9);
+      border: 1px solid rgba(63, 209, 255, 0.7);
+      color: var(--accent-2);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 12px rgba(63, 209, 255, 1);
+    }
+
+    .hero-kpi {
+      font-size: 0.65rem;
+      color: var(--text-soft);
+      text-align: right;
+    }
+
+    .hero-kpi strong {
+      color: var(--accent);
+    }
+
+    .hero-title {
+      margin-top: 8px;
+      font-size: 1.02rem;
+      font-weight: 650;
+    }
+
+    .hero-title span {
+      color: var(--accent-2);
+    }
+
+    .hero-sub {
+      margin-top: 4px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .hero-metrics {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      font-size: 0.68rem;
+    }
+
+    .hero-metric {
+      padding: 7px 7px 6px;
+      border-radius: 14px;
+      background: rgba(4, 10, 36, 0.96);
+      border: 1px solid rgba(55, 63, 112, 0.9);
+    }
+
+    .hero-metric-label {
+      font-size: 0.62rem;
+      color: var(--text-soft);
+    }
+
+    .hero-metric-value {
+      margin-top: 3px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .hero-metric-pill {
+      margin-top: 3px;
+      font-size: 0.6rem;
+      border-radius: var(--radius-pill);
+      padding: 2px 6px;
+      display: inline-block;
+    }
+
+    .hero-metric-pill.green {
+      background: rgba(66, 214, 137, 0.12);
+      border: 1px solid rgba(66, 214, 137, 0.7);
+      color: var(--success);
+    }
+
+    .hero-metric-pill.red {
+      background: rgba(255, 75, 106, 0.14);
+      border: 1px solid rgba(255, 75, 106, 0.85);
+      color: var(--danger);
+    }
+
+    /* GENERIC SECTION */
+    .section {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-xl);
+      padding: 13px 13px 11px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .section-sub {
+      font-size: 0.68rem;
+      color: var(--text-soft);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 4px 0 7px;
+    }
+
+    .chip {
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      font-size: 0.68rem;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .chip-dot.blue { background: var(--accent-2); }
+    .chip-dot.red { background: var(--danger); }
+    .chip-dot.green { background: var(--success); }
+
+    .subsection-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+      margin: 5px 2px 4px;
+    }
+
+    /* ROLE SWITCHER (INSIDE DC CONSOLE) */
+    .role-switcher {
+      margin-top: 4px;
+    }
+
+    input[type="radio"].role-toggle {
+      display: none;
+    }
+
+    .role-pill-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      padding: 4px;
+      border-radius: var(--radius-pill);
+      background: #050817;
+      border: 1px solid #2a3155;
+    }
+
+    .role-pill-row label {
+      font-size: 0.7rem;
+      text-align: center;
+      padding: 4px 0;
+      border-radius: var(--radius-pill);
+      color: var(--text-soft);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #role-exec:checked ~ .role-pill-row label[for="role-exec"],
+    #role-disp:checked ~ .role-pill-row label[for="role-disp"],
+    #role-fore:checked ~ .role-pill-row label[for="role-fore"] {
+      background: linear-gradient(135deg, #ffb400, #ff934b);
+      color: #251505;
+      font-weight: 600;
+      box-shadow: 0 9px 24px rgba(0, 0, 0, 0.7);
+    }
+
+    .role-panel {
+      display: none;
+      margin-top: 10px;
+    }
+
+    #role-exec:checked ~ .role-panels #panel-exec,
+    #role-disp:checked ~ .role-panels #panel-disp,
+    #role-fore:checked ~ .role-panels #panel-fore {
+      display: block;
+    }
+
+    /* EXEC – TIMELINE + JOBS + INCIDENTS */
+    .timeline-strip {
+      border-radius: 16px;
+      border: 1px solid #303662;
+      background: radial-gradient(circle at 0 0, #262f64, #050817);
+      padding: 7px 10px 8px;
+      font-size: 0.65rem;
+      margin-bottom: 7px;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 5px;
+      color: var(--text-soft);
+    }
+
+    .timeline-bar {
+      position: relative;
+      height: 11px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #171b31, #272f60, #171b31);
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .timeline-block {
+      position: absolute;
+      top: 1px;
+      bottom: 1px;
+      border-radius: 999px;
+      font-size: 0;
+    }
+
+    .timeline-block.critical {
+      left: 14%;
+      width: 18%;
+      background: linear-gradient(90deg, #ff4b6a, #ff934b);
+    }
+
+    .timeline-block.moderate {
+      left: 40%;
+      width: 16%;
+      background: linear-gradient(90deg, #ffb400, #ff934b);
+    }
+
+    .timeline-block.low {
+      left: 64%;
+      width: 17%;
+      background: linear-gradient(90deg, #3fd1ff, #42d689);
+    }
+
+    .timeline-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.62rem;
+      color: var(--text-soft);
+    }
+
+    .legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    .legend-dot.red { background: var(--danger); }
+    .legend-dot.amber { background: var(--warn); }
+    .legend-dot.blue { background: var(--accent-2); }
+
+    .job-list { margin-top: 4px; }
+
+    .job-card {
+      background: var(--bg-soft);
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      padding: 9px 10px;
+      margin-bottom: 7px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .job-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 115% -20%, rgba(63, 209, 255, 0.25), transparent 60%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .job-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .job-meta-top {
+      font-size: 0.68rem;
+      color: var(--text-soft);
+    }
+
+    .job-status {
+      font-size: 0.64rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(8, 11, 36, 0.95);
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .job-status.critical {
+      border-color: rgba(255, 75, 106, 0.9);
+      color: var(--danger);
+      background: rgba(255, 75, 106, 0.1);
+    }
+
+    .job-status.window {
+      border-color: rgba(255, 180, 0, 0.8);
+      color: var(--warn);
+      background: rgba(255, 180, 0, 0.08);
+    }
+
+    .job-status.live {
+      border-color: rgba(66, 214, 137, 0.8);
+      color: var(--success);
+      background: rgba(66, 214, 137, 0.08);
+    }
+
+    .job-meta-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.4fr);
+      gap: 6px;
+      font-size: 0.68rem;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meta-label {
+      font-size: 0.62rem;
+      color: var(--text-soft);
+    }
+
+    .meta-value {
+      font-size: 0.7rem;
+    }
+
+    .job-tags {
+      margin-top: 5px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tag {
+      font-size: 0.63rem;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      background: var(--chip-bg);
+      color: var(--text-soft);
+    }
+
+    .tag.priority { border-color: rgba(255, 180, 0, 0.9); color: var(--warn); }
+    .tag.sla { border-color: rgba(63, 209, 255, 0.9); color: var(--accent-2); }
+    .tag.mop { border-color: rgba(169, 123, 255, 0.9); color: var(--accent-3); }
+    .tag.risk { border-color: rgba(255, 75, 106, 0.9); color: var(--danger); }
+
+    .job-footer {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.66rem;
+      color: var(--text-soft);
+      position: relative;
+      z-index: 1;
+    }
+
+    .job-actions a {
+      text-decoration: none;
+      font-size: 0.66rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      background: rgba(4, 8, 26, 0.96);
+      color: var(--text-main);
+    }
+
+    .job-actions a.primary {
+      border-color: rgba(255, 180, 0, 0.95);
+      background: linear-gradient(135deg, #ffb400, #ff934b);
+      color: #251505;
+      font-weight: 600;
+    }
+
+    .job-handle {
+      width: 36px;
+      height: 6px;
+      border-radius: 999px;
+      border: 1px solid #343963;
+      background: repeating-linear-gradient(
+        90deg,
+        #565b8a,
+        #565b8a 4px,
+        #202642 4px,
+        #202642 8px
+      );
+      opacity: 0.7;
+      margin-top: 6px;
+      align-self: flex-end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .incident-list {
+      margin-top: 6px;
+      font-size: 0.7rem;
+    }
+
+    .incident-card {
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at 10% 0, #28102b, #090b20);
+      padding: 7px 9px;
+      margin-bottom: 6px;
+    }
+
+    .incident-headline {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .incident-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .incident-badge {
+      font-size: 0.62rem;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 75, 106, 0.8);
+      color: var(--danger);
+      background: rgba(255, 75, 106, 0.1);
+      white-space: nowrap;
+    }
+
+    .incident-body {
+      margin-top: 4px;
+      color: var(--text-soft);
+    }
+
+    .incident-meta {
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 0.64rem;
+      color: var(--text-soft);
+    }
+
+    /* DISPATCHER VIEW – CAMPUS & WEEK */
+    input[type="radio"].view-toggle { display: none; }
+
+    .view-tabs-nav {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+      padding: 4px;
+      border-radius: var(--radius-pill);
+      background: #050817;
+      border: 1px solid #2a3155;
+      margin-bottom: 8px;
+    }
+
+    .view-tabs-nav label {
+      font-size: 0.7rem;
+      text-align: center;
+      padding: 4px 0;
+      border-radius: var(--radius-pill);
+      color: var(--text-soft);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #view-today:checked ~ .view-tabs-nav label[for="view-today"],
+    #view-week:checked ~ .view-tabs-nav label[for="view-week"] {
+      background: linear-gradient(135deg, #ffb400, #ff934b);
+      color: #251505;
+      font-weight: 600;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.7);
+    }
+
+    .view-panel { display: none; }
+
+    #view-today:checked ~ .view-panels #panel-today,
+    #view-week:checked ~ .view-panels #panel-week {
+      display: block;
+    }
+
+    .campus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      font-size: 0.68rem;
+    }
+
+    .campus-col {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-soft);
+      padding: 7px 7px 6px;
+    }
+
+    .campus-name {
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .campus-code {
+      font-size: 0.62rem;
+      color: var(--text-soft);
+    }
+
+    .campus-chip {
+      font-size: 0.62rem;
+      border-radius: var(--radius-pill);
+      padding: 2px 6px;
+      border: 1px solid #343b6a;
+      background: #050818;
+      margin-top: 5px;
+      display: inline-block;
+      color: var(--text-soft);
+    }
+
+    .campus-slot {
+      margin-top: 6px;
+      padding: 4px 5px;
+      border-radius: 12px;
+      background: #090f27;
+      border: 1px dashed #393f72;
+    }
+
+    .campus-slot strong {
+      display: block;
+      font-size: 0.68rem;
+    }
+
+    .campus-slot span {
+      display: block;
+      font-size: 0.62rem;
+      color: var(--text-soft);
+      margin-top: 1px;
+    }
+
+    .dispatch-note {
+      margin-top: 7px;
+      font-size: 0.68rem;
+      color: var(--text-soft);
+      padding: 7px 8px;
+      border-radius: 14px;
+      border: 1px dashed rgba(255, 180, 0, 0.8);
+      background: rgba(7, 11, 34, 0.96);
+    }
+
+    .week-grid {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      font-size: 0.68rem;
+    }
+
+    .day-card {
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-soft);
+      padding: 7px 8px;
+    }
+
+    .day-name {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .day-date {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 1px;
+    }
+
+    .day-stat {
+      margin-top: 4px;
+      font-size: 0.64rem;
+      color: var(--text-soft);
+    }
+
+    .day-stat strong {
+      color: var(--text-main);
+    }
+
+    .day-pill {
+      margin-top: 4px;
+      font-size: 0.62rem;
+      padding: 3px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      color: var(--text-soft);
+      display: inline-block;
+    }
+
+    .day-pill.red {
+      border-color: rgba(255, 75, 106, 0.9);
+      color: var(--danger);
+    }
+
+    .day-pill.green {
+      border-color: rgba(66, 214, 137, 0.9);
+      color: var(--success);
+    }
+
+    /* FOREMAN – MOP CHECKLIST + LOG */
+    .checklist-card {
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at 0 0, #262f64, #050817);
+      padding: 9px 10px 9px;
+      font-size: 0.7rem;
+    }
+
+    .checklist-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .checklist-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .checklist-step-pill {
+      font-size: 0.62rem;
+      border-radius: var(--radius-pill);
+      padding: 3px 7px;
+      border: 1px solid rgba(63, 209, 255, 0.8);
+      color: var(--accent-2);
+      background: rgba(6, 13, 42, 0.95);
+      white-space: nowrap;
+    }
+
+    .checklist-sub {
+      font-size: 0.66rem;
+      color: var(--text-soft);
+      margin-bottom: 5px;
+    }
+
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      padding: 4px 0;
+    }
+
+    .step-bullet {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 1px solid #3b4372;
+      background: radial-gradient(circle at 30% 0, #3fd1ff33, #050817);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .step-bullet.done {
+      border-color: rgba(66, 214, 137, 0.9);
+      background: radial-gradient(circle at 30% 0, #42d689, #050817);
+      box-shadow: 0 0 10px rgba(66, 214, 137, 0.9);
+    }
+
+    .step-text-main {
+      font-size: 0.7rem;
+    }
+
+    .step-text-sub {
+      font-size: 0.62rem;
+      color: var(--text-soft);
+      margin-top: 1px;
+    }
+
+    .foreman-footer {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.66rem;
+      color: var(--text-soft);
+    }
+
+    .foreman-badge {
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 180, 0, 0.8);
+      background: rgba(255, 180, 0, 0.06);
+      color: var(--warn);
+      white-space: nowrap;
+    }
+
+    .foreman-actions a {
+      text-decoration: none;
+      font-size: 0.66rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      background: rgba(5, 9, 30, 0.96);
+      color: var(--text-main);
+    }
+
+    .foreman-actions a.primary {
+      border-color: rgba(63, 209, 255, 0.9);
+      background: linear-gradient(135deg, #3fd1ff, #a97bff);
+      color: #050714;
+      font-weight: 600;
+    }
+
+    .foreman-log {
+      margin-top: 7px;
+      font-size: 0.68rem;
+      color: var(--text-soft);
+      padding: 7px 8px;
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(6, 10, 30, 0.96);
+    }
+
+    .foreman-log strong {
+      color: var(--text-main);
+    }
+
+    /* SCHEDULING BOARD */
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
+      gap: 8px;
+      font-size: 0.7rem;
+    }
+
+    .schedule-board {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-soft);
+      padding: 8px 8px 7px;
+    }
+
+    .schedule-column {
+      margin-bottom: 6px;
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #353c66;
+    }
+
+    .schedule-column:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .schedule-header {
+      font-size: 0.68rem;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      font-size: 0.64rem;
+      color: var(--text-soft);
+      background: #050817;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-2);
+    }
+
+    .pill-dot.red { background: var(--danger); }
+    .pill-dot.green { background: var(--success); }
+
+    .schedule-slot {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .schedule-time {
+      font-size: 0.66rem;
+      color: var(--text-soft);
+      width: 44px;
+      flex-shrink: 0;
+    }
+
+    .schedule-job {
+      flex: 1;
+    }
+
+    .schedule-job-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .schedule-job-meta {
+      font-size: 0.64rem;
+      color: var(--text-soft);
+    }
+
+    .chip-person {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid #414773;
+      font-size: 0.62rem;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .schedule-messages {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at 0 0, #262f64, #050817);
+      padding: 8px 9px;
+    }
+
+    .msg-preview {
+      font-size: 0.66rem;
+      color: var(--text-soft);
+      border-radius: 12px;
+      border: 1px solid #353c66;
+      background: rgba(5, 9, 30, 0.96);
+      padding: 6px 7px;
+      margin-bottom: 5px;
+    }
+
+    .msg-preview strong {
+      color: var(--text-main);
+    }
+
+    .msg-tagline {
+      font-size: 0.64rem;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+
+    /* EQUIPMENT TRACKER */
+    .equipment-card {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-soft);
+      padding: 8px 9px;
+      font-size: 0.7rem;
+    }
+
+    .equipment-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 6px;
+      padding: 4px 0;
+      border-bottom: 1px dashed #353c66;
+    }
+
+    .equipment-row.header {
+      font-size: 0.64rem;
+      color: var(--text-soft);
+      border-bottom: 1px solid #353c66;
+      padding-bottom: 3px;
+    }
+
+    .equipment-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .equipment-name {
+      font-weight: 600;
+      font-size: 0.7rem;
+    }
+
+    .equipment-site {
+      font-size: 0.66rem;
+      color: var(--text-soft);
+    }
+
+    .equipment-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      font-size: 0.62rem;
+      border: 1px solid var(--chip-border);
+      color: var(--text-soft);
+      background: #050817;
+      justify-content: flex-start;
+    }
+
+    .equipment-status-pill.bad {
+      border-color: rgba(255, 75, 106, 0.9);
+      color: var(--danger);
+    }
+
+    .equipment-footnote {
+      margin-top: 5px;
+      font-size: 0.64rem;
+      color: var(--text-soft);
+    }
+
+    /* JHA / PRE-TASK */
+    .jha-card {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-soft);
+      padding: 8px 9px;
+      font-size: 0.7rem;
+    }
+
+    .jha-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 7px;
+      margin-top: 4px;
+    }
+
+    .jha-column-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .jha-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      font-size: 0.62rem;
+      color: var(--text-soft);
+      margin: 2px 2px 0 0;
+    }
+
+    .jha-chip.hazard {
+      border-color: rgba(255, 180, 0, 0.9);
+      color: var(--warn);
+    }
+
+    .jha-chip.control {
+      border-color: rgba(66, 214, 137, 0.9);
+      color: var(--success);
+    }
+
+    .sign-row {
+      margin-top: 7px;
+      font-size: 0.64rem;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .sign-pill {
+      padding: 3px 7px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      background: #050817;
+    }
+
+    /* DAILY GOALS & PRODUCTION */
+    .goals-card {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at 0 0, #273065, #050817);
+      padding: 8px 9px;
+      font-size: 0.7rem;
+    }
+
+    .goals-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 6px;
+    }
+
+    .progress-bar {
+      margin-top: 3px;
+      height: 7px;
+      border-radius: 999px;
+      background: #141932;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #3fd1ff, #42d689);
+      width: 68%;
+    }
+
+    .blockers {
+      margin-top: 5px;
+      font-size: 0.66rem;
+      color: var(--text-soft);
+    }
+
+    .blocker-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px dashed #ff934b;
+      font-size: 0.62rem;
+      color: var(--warn);
+      margin-right: 3px;
+      margin-top: 2px;
+    }
+
+    /* PEOPLE / APPRENTICES / CERTS / TASK CARDS */
+    .people-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 8px;
+      font-size: 0.7rem;
+    }
+
+    .apprentice-card,
+    .cert-card,
+    .playbook-card {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-soft);
+      padding: 8px 9px;
+    }
+
+    .apprentice-row {
+      padding: 4px 0;
+      border-bottom: 1px dashed #353c66;
+    }
+
+    .apprentice-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .apprentice-name {
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .apprentice-task {
+      font-size: 0.64rem;
+      color: var(--text-soft);
+    }
+
+    .apprentice-level-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      font-size: 0.62rem;
+      color: var(--success);
+      margin-top: 2px;
+    }
+
+    .apprentice-level-pill.assist {
+      color: var(--accent-2);
+      border-color: rgba(63, 209, 255, 0.9);
+    }
+
+    .cert-row {
+      padding: 4px 0;
+      border-bottom: 1px dashed #353c66;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .cert-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .cert-name {
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .cert-tags {
+      font-size: 0.62rem;
+      color: var(--text-soft);
+    }
+
+    .cert-pill {
+      display: inline-flex;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      margin: 1px 2px 0 0;
+    }
+
+    .cert-pill.expiring {
+      border-color: rgba(255, 180, 0, 0.9);
+      color: var(--warn);
+    }
+
+    .cert-pill.good {
+      border-color: rgba(66, 214, 137, 0.9);
+      color: var(--success);
+    }
+
+    .playbook-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+      font-size: 0.68rem;
+      color: var(--text-soft);
+    }
+
+    .playbook-item {
+      padding: 3px 0;
+      border-bottom: 1px dashed #353c66;
+    }
+
+    .playbook-item:last-of-type {
+      border-bottom: none;
+    }
+
+    .playbook-item-title {
+      font-size: 0.7rem;
+      color: var(--text-main);
+    }
+
+    .playbook-tag {
+      display: inline-block;
+      font-size: 0.62rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      padding: 2px 6px;
+      margin-top: 2px;
+    }
+
+    /* OVERLAYS (CHANGE DETAILS) */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 90;
+      padding: 0 10px 94px;
+    }
+
+    .overlay-content {
+      background: #040715;
+      border-radius: 26px;
+      padding: 14px 14px 15px;
+      border: 1px solid var(--border-subtle);
+      width: 100%;
+      max-width: 540px;
+      box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.95);
+      font-size: 0.7rem;
+    }
+
+    .overlay-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .overlay-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .overlay-sub {
+      font-size: 0.66rem;
+      color: var(--text-soft);
+    }
+
+    .overlay-close {
+      text-decoration: none;
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      padding: 1px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(6, 10, 30, 0.96);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .overlay-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
+      gap: 7px;
+      margin-top: 4px;
+    }
+
+    .overlay-label {
+      color: var(--text-soft);
+      font-size: 0.64rem;
+    }
+
+    .overlay-value {
+      font-size: 0.72rem;
+    }
+
+    .overlay-notes {
+      margin-top: 8px;
+      padding: 8px 9px;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(7, 10, 32, 0.96);
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .overlay-footer {
+      margin-top: 9px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.7rem;
+    }
+
+    .overlay-footer .btn {
+      flex: 1;
+      text-align: center;
+      padding: 7px 3px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--chip-border);
+      text-decoration: none;
+      color: var(--text-main);
+      background: rgba(7, 11, 35, 0.98);
+    }
+
+    .overlay-footer .btn.primary {
+      border-color: rgba(255, 180, 0, 0.95);
+      background: linear-gradient(135deg, #ffb400, #ff934b);
+      color: #251505;
+      font-weight: 600;
+    }
+
+    .overlay-footer .btn.danger {
+      border-color: rgba(255, 75, 106, 0.9);
+      color: var(--danger);
+    }
+
+    #chg-ocotillo:target,
+    #chg-cloudpark:target,
+    #chg-goodyear:target {
+      display: flex;
+    }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      width: min(540px, 100% - 16px);
+      padding: 4px 6px;
+      border-radius: 999px;
+      background: rgba(2, 5, 20, 0.98);
+      border: 1px solid #2d345f;
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+      backdrop-filter: blur(18px);
+    }
+
+    .bottom-nav label {
+      flex: 1;
+      cursor: pointer;
+      color: var(--text-soft);
+      font-size: 0.64rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px 3px;
+      border-radius: 999px;
+      text-align: center;
+      user-select: none;
+    }
+
+    .bottom-nav label .icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 6px;
+      border: 1px solid #363b64;
+      background: #101633;
+    }
+
+    /* ACTIVE TAB STYLING */
+    #tab-console:checked ~ .app-shell .bottom-nav label[for="tab-console"],
+    #tab-schedule:checked ~ .app-shell .bottom-nav label[for="tab-schedule"],
+    #tab-jobs:checked ~ .app-shell .bottom-nav label[for="tab-jobs"],
+    #tab-people:checked ~ .app-shell .bottom-nav label[for="tab-people"] {
+      color: #251505;
+      background: linear-gradient(135deg, #ffb400, #ff934b);
+      font-weight: 600;
+    }
+
+    #tab-console:checked ~ .app-shell .bottom-nav label[for="tab-console"] .icon,
+    #tab-schedule:checked ~ .app-shell .bottom-nav label[for="tab-schedule"] .icon,
+    #tab-jobs:checked ~ .app-shell .bottom-nav label[for="tab-jobs"] .icon,
+    #tab-people:checked ~ .app-shell .bottom-nav label[for="tab-people"] .icon {
+      border: none;
+      background: transparent;
+      position: relative;
+    }
+
+    #tab-console:checked ~ .app-shell .bottom-nav label[for="tab-console"] .icon::before,
+    #tab-schedule:checked ~ .app-shell .bottom-nav label[for="tab-schedule"] .icon::before,
+    #tab-jobs:checked ~ .app-shell .bottom-nav label[for="tab-jobs"] .icon::before,
+    #tab-people:checked ~ .app-shell .bottom-nav label[for="tab-people"] .icon::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 4px;
+      background: #251505;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 420px) {
+      .hero-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .campus-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .week-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .overlay-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .schedule-grid,
+      .people-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- MAIN TAB RADIOS -->
+  <input type="radio" id="tab-console" name="tab" class="tab-toggle" checked />
+  <input type="radio" id="tab-schedule" name="tab" class="tab-toggle" />
+  <input type="radio" id="tab-jobs" name="tab" class="tab-toggle" />
+  <input type="radio" id="tab-people" name="tab" class="tab-toggle" />
+
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div>
+          <div class="brand-text-main">48 Electric</div>
+          <div class="brand-text-sub">Data Center Ops Suite · Demo</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="user-pill">
+          <span class="user-pill-dot"></span>
+          <span>Alex · CAO</span>
+        </div>
+        <div class="header-site">
+          Tonight: <span>Ocotillo · Goodyear · Mesa CloudPark</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-scroll">
+      <!-- PANEL: DC CONSOLE -->
+      <div class="panel panel-console">
+        <section class="hero-banner">
+          <div class="hero-inner">
+            <div class="hero-tag-row">
+              <div class="hero-chip">
+                <span class="hero-dot"></span>
+                Tonight’s DC plan is already solved
+              </div>
+              <div class="hero-kpi">
+                <strong>4</strong> change windows · <strong>3</strong> campuses
+              </div>
+            </div>
+            <div class="hero-title">
+              One screen for <span>all power work</span> in the region.
+            </div>
+            <div class="hero-sub">
+              This replaces tonight’s spreadsheet, group texts, and “who’s where?”
+              calls with a live picture of change windows, crews, and risk.
+            </div>
+            <div class="hero-metrics">
+              <div class="hero-metric">
+                <div class="hero-metric-label">CAO time spent planning</div>
+                <div class="hero-metric-value">8 min</div>
+                <div class="hero-metric-pill green">vs 45–60 min typical</div>
+              </div>
+              <div class="hero-metric">
+                <div class="hero-metric-label">Predicted overtime</div>
+                <div class="hero-metric-value">2.3 hrs</div>
+                <div class="hero-metric-pill red">
+                  ↓ 5.6 hrs if suggestion applied
+                </div>
+              </div>
+              <div class="hero-metric">
+                <div class="hero-metric-label">SLA risk tonight</div>
+                <div class="hero-metric-value">0 tickets</div>
+                <div class="hero-metric-pill green">CloudCore & NetSphere green</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title">DC Console · Role-based view</div>
+              <div class="section-sub">
+                Tap a role to see what you, dispatch, and foremen would actually use.
+              </div>
+            </div>
+          </div>
+
+          <div class="role-switcher">
+            <input type="radio" id="role-exec" name="role" class="role-toggle" checked />
+            <input type="radio" id="role-disp" name="role" class="role-toggle" />
+            <input type="radio" id="role-fore" name="role" class="role-toggle" />
+
+            <div class="role-pill-row">
+              <label for="role-exec">Executive</label>
+              <label for="role-disp">Dispatcher</label>
+              <label for="role-fore">Foreman</label>
+            </div>
+
+            <div class="role-panels">
+              <!-- EXEC -->
+              <div id="panel-exec" class="role-panel">
+                <div class="subsection-title">Executive · Tonight 18:00–06:00</div>
+
+                <div class="timeline-strip">
+                  <div class="timeline-header">
+                    <span>Ocotillo · Goodyear · CloudPark</span>
+                    <span>Critical power work only</span>
+                  </div>
+                  <div class="timeline-bar">
+                    <div class="timeline-block critical"></div>
+                    <div class="timeline-block moderate"></div>
+                    <div class="timeline-block low"></div>
+                  </div>
+                  <div class="timeline-legend">
+                    <span><span class="legend-dot red"></span>UPS / STS work · single-corded loads nearby</span>
+                    <span><span class="legend-dot.amber legend-dot"></span>PDU / panel work · redundant path</span>
+                    <span><span class="legend-dot blue"></span>IR / torque / label checks · low risk</span>
+                  </div>
+                </div>
+
+                <div class="job-list">
+                  <article class="job-card">
+                    <div class="job-header">
+                      <div>
+                        <div class="job-title">
+                          Ocotillo DC – UPS-B bypass & battery test
+                        </div>
+                        <div class="job-meta-top">
+                          CHG-2471 · Foreman: M. Diaz · Crew of 4 · Campus: OC-2
+                        </div>
+                      </div>
+                      <div class="job-status critical">Critical path</div>
+                    </div>
+
+                    <div class="job-meta-grid">
+                      <div>
+                        <div class="meta-label">Window</div>
+                        <div class="meta-value">20:00 – 23:30</div>
+                      </div>
+                      <div>
+                        <div class="meta-label">Risk notes</div>
+                        <div class="meta-value">
+                          Supports HALL 3 cold aisle · 17 single-corded racks flagged by BMS.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="job-tags">
+                      <span class="tag priority">Client: CloudCore · Gold SLA</span>
+                      <span class="tag sla">Change ticket approved</span>
+                      <span class="tag risk">Requires redundant path verified</span>
+                    </div>
+
+                    <div class="job-footer">
+                      <div>
+                        App: Split IR / trending later → OT drops from
+                        <strong>3.8 hrs</strong> → <strong>1.4 hrs</strong>.
+                      </div>
+                      <div class="job-actions">
+                        <a href="#chg-ocotillo" class="primary">See suggestion</a>
+                      </div>
+                    </div>
+                    <div class="job-handle"></div>
+                  </article>
+
+                  <article class="job-card">
+                    <div class="job-header">
+                      <div>
+                        <div class="job-title">
+                          Mesa CloudPark – PDU-3 IR scan & torque checks
+                        </div>
+                        <div class="job-meta-top">
+                          CHG-2464 · Foreman: J. Ramirez · Crew of 3 · Campus: CP-1
+                        </div>
+                      </div>
+                      <div class="job-status window">Inside window</div>
+                    </div>
+                    <div class="job-meta-grid">
+                      <div>
+                        <div class="meta-label">Window</div>
+                        <div class="meta-value">19:00 – 01:00</div>
+                      </div>
+                      <div>
+                        <div class="meta-label">Risk notes</div>
+                        <div class="meta-value">
+                          Dual-corded racks only · no STS or ATS work tonight.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="job-tags">
+                      <span class="tag mop">MOP v2.3 · e-signed</span>
+                      <span class="tag sla">Client: NetSphere · 48-hr notice logged</span>
+                    </div>
+                    <div class="job-footer">
+                      <div>
+                        App: 1 tech can float 22:00–23:30 to back up UPS-B without SLA impact.
+                      </div>
+                      <div class="job-actions">
+                        <a href="#chg-cloudpark">View overlap</a>
+                      </div>
+                    </div>
+                    <div class="job-handle"></div>
+                  </article>
+
+                  <article class="job-card">
+                    <div class="job-header">
+                      <div>
+                        <div class="job-title">
+                          Goodyear Edge – Gen-3 load bank test
+                        </div>
+                        <div class="job-meta-top">
+                          CHG-2482 · Foreman: K. Lewis · Crew of 2 · Campus: GY-1
+                        </div>
+                      </div>
+                      <div class="job-status live">Live now</div>
+                    </div>
+                    <div class="job-meta-grid">
+                      <div>
+                        <div class="meta-label">Window</div>
+                        <div class="meta-value">18:30 – 21:00</div>
+                      </div>
+                      <div>
+                        <div class="meta-label">Risk notes</div>
+                        <div class="meta-value">
+                          Utility normal · ATS testing locked out while this is open.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="job-tags">
+                      <span class="tag">75 → 100% load · staged</span>
+                      <span class="tag sla">Tenants notified as “monitor-only”</span>
+                    </div>
+                    <div class="job-footer">
+                      <div>On pace · no predicted OT at current burn rate.</div>
+                      <div class="job-actions">
+                        <a href="#chg-goodyear">See scope</a>
+                      </div>
+                    </div>
+                    <div class="job-handle"></div>
+                  </article>
+                </div>
+
+                <div class="subsection-title">Memory of risk · not just tonight</div>
+                <div class="incident-list">
+                  <div class="incident-card">
+                    <div class="incident-headline">
+                      <div class="incident-title">
+                        Ocotillo · brief temp spike in HALL 3 last month
+                      </div>
+                      <div class="incident-badge">Watched</div>
+                    </div>
+                    <div class="incident-body">
+                      4-minute hot aisle deviation (+3.2°C) during UPS-B test on CHG-2418.
+                      Future UPS-B work in HALL 3 is flagged “sensitive”.
+                    </div>
+                    <div class="incident-meta">
+                      <span>Root cause: door propped during gen test</span>
+                      <span>Note auto-attached to new UPS-B MOPs here.</span>
+                    </div>
+                  </div>
+
+                  <div class="incident-card">
+                    <div class="incident-headline">
+                      <div class="incident-title">
+                        CloudPark · late PDU notices to NetSphere
+                      </div>
+                      <div class="incident-badge">Client friction risk</div>
+                    </div>
+                    <div class="incident-body">
+                      NetSphere got day-of emails on last 2 PDU changes. This console
+                      forces a 48-hour buffer: dispatch can’t “forget” to send it.
+                    </div>
+                    <div class="incident-meta">
+                      <span>Next PDU work: tonight 19:00–01:00 (CHG-2464)</span>
+                      <span>Notice status: sent · confirmed</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DISPATCHER ROLE FROM EARLIER -->
+              <div id="panel-disp" class="role-panel">
+                <div class="subsection-title">Dispatcher · Who’s where</div>
+
+                <div class="chip-row">
+                  <div class="chip">
+                    <span class="chip-dot green"></span> All crews clocked in
+                  </div>
+                  <div class="chip">
+                    <span class="chip-dot red"></span> 1 crew > 9.5 hr day
+                  </div>
+                  <div class="chip">
+                    <span class="chip-dot blue"></span> BMS & client portals synced
+                  </div>
+                </div>
+
+                <input type="radio" id="view-today" name="view" class="view-toggle" checked />
+                <input type="radio" id="view-week" name="view" class="view-toggle" />
+
+                <div class="view-tabs-nav">
+                  <label for="view-today">Today</label>
+                  <label for="view-week">Week</label>
+                </div>
+
+                <div class="view-panels">
+                  <div id="panel-today" class="view-panel">
+                    <div class="campus-grid">
+                      <div class="campus-col">
+                        <div class="campus-name">Ocotillo DC</div>
+                        <div class="campus-code">OC-2 · Chandler</div>
+                        <div class="campus-chip">Crew A · Diaz (4 techs)</div>
+
+                        <div class="campus-slot">
+                          <strong>UPS-B bypass & test</strong>
+                          <span>20:00–23:30 · HALL 3 cold aisle</span>
+                          <span>OT forecast: 3.8 hrs → 1.4 hrs with app swap</span>
+                        </div>
+
+                        <div class="campus-slot">
+                          <strong>Label / IR spot checks</strong>
+                          <span>23:30–01:00 · Crew D floats if needed</span>
+                        </div>
+                      </div>
+
+                      <div class="campus-col">
+                        <div class="campus-name">CloudPark</div>
+                        <div class="campus-code">CP-1 · Mesa</div>
+                        <div class="campus-chip">Crew B · Ramirez (3 techs)</div>
+
+                        <div class="campus-slot">
+                          <strong>PDU-3 IR & torque</strong>
+                          <span>19:00–01:00 · HALL 1 / 2</span>
+                          <span>Marked flexible · 1 tech can cover Ocotillo</span>
+                        </div>
+
+                        <div class="campus-slot">
+                          <strong>Panel labeling tidy-up</strong>
+                          <span>Float work if UPS job runs long</span>
+                        </div>
+                      </div>
+
+                      <div class="campus-col">
+                        <div class="campus-name">Goodyear Edge</div>
+                        <div class="campus-code">GY-1 · Goodyear</div>
+                        <div class="campus-chip">Crew C · Lewis (2 techs)</div>
+
+                        <div class="campus-slot">
+                          <strong>Gen-3 load bank test</strong>
+                          <span>18:30–21:00 · yard & gen pad</span>
+                          <span>ATS work locked out while open</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="dispatch-note">
+                      <strong>Pitch line:</strong> “Instead of three whiteboards
+                      and a group chat, dispatch sees this. When a GC calls at
+                      21:00 asking if we can squeeze in more work, we already
+                      know who’s free and what’s safe.”
+                    </div>
+                  </div>
+
+                  <div id="panel-week" class="view-panel">
+                    <div class="week-grid">
+                      <div class="day-card">
+                        <div class="day-name">Mon</div>
+                        <div class="day-date">Dec 8</div>
+                        <div class="day-stat">
+                          <strong>9</strong> jobs · <strong>6</strong> crews
+                        </div>
+                        <div class="day-pill green">Balanced</div>
+                      </div>
+                      <div class="day-card">
+                        <div class="day-name">Tue</div>
+                        <div class="day-date">Dec 9</div>
+                        <div class="day-stat">
+                          <strong>11</strong> jobs · <strong>7</strong> crews
+                        </div>
+                        <div class="day-pill">Light OT</div>
+                      </div>
+                      <div class="day-card">
+                        <div class="day-name">Wed</div>
+                        <div class="day-date">Dec 10</div>
+                        <div class="day-stat">
+                          <strong>10</strong> jobs · <strong>7</strong> crews
+                        </div>
+                        <div class="day-pill red">Overbook risk</div>
+                      </div>
+                      <div class="day-card">
+                        <div class="day-name">Thu</div>
+                        <div class="day-date">Dec 11</div>
+                        <div class="day-stat">
+                          <strong>8</strong> jobs · <strong>5</strong> crews
+                        </div>
+                        <div class="day-pill green">Capacity available</div>
+                      </div>
+                      <div class="day-card">
+                        <div class="day-name">Fri</div>
+                        <div class="day-date">Dec 12</div>
+                        <div class="day-stat">
+                          <strong>10</strong> jobs · <strong>6</strong> crews
+                        </div>
+                        <div class="day-pill">Normal</div>
+                      </div>
+                      <div class="day-card">
+                        <div class="day-name">Sat</div>
+                        <div class="day-date">Dec 13</div>
+                        <div class="day-stat">
+                          <strong>4</strong> jobs · <strong>2</strong> crews
+                        </div>
+                          <div class="day-pill red">Overtime only</div>
+                      </div>
+                    </div>
+
+                    <div class="dispatch-note">
+                      “This is where we stop guessing about the week. We choose
+                      which days we want to run hot and which days we protect margin.”
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FOREMAN ROLE -->
+              <div id="panel-fore" class="role-panel">
+                <div class="subsection-title">Foreman · What it feels like on phone</div>
+
+                <div class="checklist-card">
+                  <div class="checklist-head">
+                    <div>
+                      <div class="checklist-title">
+                        UPS-B Bypass & Battery Test · CHG-2471
+                      </div>
+                      <div class="checklist-sub">
+                        You: Diaz · Crew A · Ocotillo DC OC-2 · HALL 3 cold aisle
+                      </div>
+                    </div>
+                    <div class="checklist-step-pill">
+                      Step 2 of 6 in MOP
+                    </div>
+                  </div>
+
+                  <ul class="step-list">
+                    <li class="step-item">
+                      <div class="step-bullet.done step-bullet"></div>
+                      <div>
+                        <div class="step-text-main">
+                          Confirm redundant path and loads.
+                        </div>
+                        <div class="step-text-sub">
+                          Verified UPS-A is carrying single-corded racks and alarms are clear in BMS.
+                        </div>
+                      </div>
+                    </li>
+                    <li class="step-item">
+                      <div class="step-bullet done"></div>
+                      <div>
+                        <div class="step-text-main">
+                          Walk HALL 3, confirm “Maintenance in progress” placards.
+                        </div>
+                        <div class="step-text-sub">
+                          Cold aisle walked with site tech · all cabinet doors latched.
+                        </div>
+                      </div>
+                    </li>
+                    <li class="step-item">
+                      <div class="step-bullet"></div>
+                      <div>
+                        <div class="step-text-main">
+                          Place UPS-B in bypass per MOP steps 3.1–3.6.
+                        </div>
+                        <div class="step-text-sub">
+                          App timestamps and attaches this step to the change record automatically.
+                        </div>
+                      </div>
+                    </li>
+                    <li class="step-item">
+                      <div class="step-bullet"></div>
+                      <div>
+                        <div class="step-text-main">
+                          Start battery test & trend alarms.
+                        </div>
+                        <div class="step-text-sub">
+                          IR scan is moved to 23:00–01:00 to keep OT under control.
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+
+                  <div class="foreman-footer">
+                    <div class="foreman-badge">
+                      Safety lock: no gen / ATS steps while this is open
+                    </div>
+                    <div class="foreman-actions">
+                      <a href="#" class="primary">Mark step complete</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="foreman-log">
+                  <strong>Daily log (auto-built, not typed):</strong><br />
+                  20:11 – UPS-A path verified, single-corded racks accounted for.<br />
+                  20:17 – HALL 3 cold aisle placards posted. Client tech “Jordan S.”
+                  walked aisle with us.<br />
+                  20:22 – Ready to place UPS-B in bypass. No alarms present.<br /><br />
+                  Foremen just tap through the MOP. The app builds this for you
+                  and for client reports instead of someone typing it into Excel at 1 AM.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- PANEL: SCHEDULING -->
+      <div class="panel panel-schedule">
+        <section class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Daily Scheduling Board</div>
+              <div class="section-sub">
+                Drag people onto jobs once, auto-generate their schedule messages.
+              </div>
+            </div>
+          </div>
+
+          <div class="schedule-grid">
+            <div class="schedule-board">
+              <div class="schedule-header">
+                <span>Tomorrow · Thu · Chandler / Mesa</span>
+                <span class="pill">
+                  <span class="pill-dot"></span> Draft board
+                </span>
+              </div>
+
+              <div class="schedule-column">
+                <div class="schedule-header">
+                  <span>Ocotillo · OC-2</span>
+                  <span>Client: CloudCore</span>
+                </div>
+                <div class="schedule-slot">
+                  <div class="schedule-time">06:00</div>
+                  <div class="schedule-job">
+                    <div class="schedule-job-title">HALL 3 UPS-B prep & walkdown</div>
+                    <div class="schedule-job-meta">
+                      Address: 2700 S Price Rd · Gate A
+                    </div>
+                    <div class="chip-person">
+                      Diaz · Lead · Crew A
+                    </div>
+                    <div class="chip-person">
+                      Lee · Journeyman
+                    </div>
+                    <div class="chip-person">
+                      Carter · Apprentice
+                    </div>
+                  </div>
+                </div>
+                <div class="schedule-slot">
+                  <div class="schedule-time">20:00</div>
+                  <div class="schedule-job">
+                    <div class="schedule-job-title">UPS-B bypass & battery test</div>
+                    <div class="schedule-job-meta">
+                      Night shift · change window 20:00–23:30
+                    </div>
+                    <div class="chip-person">
+                      Diaz · Lead
+                    </div>
+                    <div class="chip-person">
+                      Carter · Apprentice
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="schedule-column">
+                <div class="schedule-header">
+                  <span>Mesa CloudPark · CP-1</span>
+                  <span>Client: NetSphere</span>
+                </div>
+                <div class="schedule-slot">
+                  <div class="schedule-time">07:00</div>
+                  <div class="schedule-job">
+                    <div class="schedule-job-title">PDU-3 IR scan & torque</div>
+                    <div class="schedule-job-meta">
+                      HALL 1 / 2 · day shift
+                    </div>
+                    <div class="chip-person">
+                      Ramirez · Lead · Crew B
+                    </div>
+                    <div class="chip-person">
+                      Nguyen · Apprentice
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="schedule-column">
+                <div class="schedule-header">
+                  <span>Goodyear Edge · GY-1</span>
+                  <span>Client: CloudCore</span>
+                </div>
+                <div class="schedule-slot">
+                  <div class="schedule-time">18:30</div>
+                  <div class="schedule-job">
+                    <div class="schedule-job-title">Gen-3 load bank test</div>
+                    <div class="schedule-job-meta">
+                      Yard & gen pad · night
+                    </div>
+                    <div class="chip-person">
+                      Lewis · Lead · Crew C
+                    </div>
+                    <div class="chip-person">
+                      Ortiz · Apprentice
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="schedule-messages">
+              <div class="subsection-title">Auto-generated crew messages</div>
+
+              <div class="msg-preview">
+                <strong>Text to Diaz – Crew A</strong><br />
+                “Tomorrow (Thu):<br />
+                • 06:00 – Ocotillo OC-2 – HALL 3 UPS-B prep & walkdown<br />
+                &nbsp;&nbsp;2700 S Price Rd · Gate A · meet CloudCore tech at dock 2<br />
+                • 20:00 – Ocotillo – UPS-B bypass & battery test (night change window)<br />
+                Notes: bring infrared camera, torque wrench, bypass lock set.”
+              </div>
+
+              <div class="msg-preview">
+                <strong>Text to Ramirez – Crew B</strong><br />
+                “Tomorrow (Thu): 07:00 – Mesa CloudPark CP-1 – PDU-3 IR scan & torque
+                in HALL 1 / 2. Use MOP CP-PDU3-v2.3. Badged access, park on east side.”
+              </div>
+
+              <div class="msg-tagline">
+                Pitch line: “You drag crews onto jobs once. The system formats these
+                messages so you can paste into Teams or text without copy-paste chaos.”
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- PANEL: JOBS & FIELD (EQUIPMENT, JHA, PRODUCTION) -->
+      <div class="panel panel-jobs">
+        <section class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Tools & Jobs · Field view</div>
+              <div class="section-sub">
+                Where are the tools, what’s the JHA, and how did the day go?
+              </div>
+            </div>
+          </div>
+
+          <!-- EQUIPMENT TRACKER -->
+          <div class="subsection-title">Tool & Equipment tracker</div>
+          <div class="equipment-card">
+            <div class="equipment-row header">
+              <div>Equipment</div>
+              <div>Where it is</div>
+              <div>Assigned to</div>
+            </div>
+
+            <div class="equipment-row">
+              <div>
+                <div class="equipment-name">60kW tow-behind generator · G-03</div>
+                <div class="equipment-site">Site: Goodyear Edge · GY-1</div>
+              </div>
+              <div>
+                <div class="equipment-status-pill">
+                  <span class="pill-dot"></span> On job: Gen-3 load bank test
+                </div>
+                <div style="font-size:0.62rem; color:var(--text-soft); margin-top:2px;">
+                  Yard / gen pad
+                </div>
+              </div>
+              <div>
+                <div class="equipment-status-pill">
+                  Crew C · Lewis
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-row">
+              <div>
+                <div class="equipment-name">Greenlee 881 bender kit</div>
+                <div class="equipment-site">Site: Mesa CloudPark · CP-1</div>
+              </div>
+              <div>
+                <div class="equipment-status-pill">
+                  <span class="pill-dot"></span> On job: PDU-3 rough-in bay
+                </div>
+                <div style="font-size:0.62rem; color:var(--text-soft); margin-top:2px;">
+                  HALL 1 · Aisle A3
+                </div>
+              </div>
+              <div>
+                <div class="equipment-status-pill">
+                  Crew B · Ramirez
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-row">
+              <div>
+                <div class="equipment-name">Fiberglass ladder 10’ · L-12</div>
+                <div class="equipment-site">Last scanned: Ocotillo OC-2</div>
+              </div>
+              <div>
+                <div class="equipment-status-pill bad">
+                  <span class="pill-dot.red pill-dot"></span> Not checked in today
+                </div>
+                <div style="font-size:0.62rem; color:var(--text-soft); margin-top:2px;">
+                  Flagged: ask Crew A at start of shift
+                </div>
+              </div>
+              <div>
+                <div class="equipment-status-pill">
+                  Unknown · last tagged to Diaz
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-row">
+              <div>
+                <div class="equipment-name">Fluke IR camera · IR-02</div>
+                <div class="equipment-site">Shop shelf · Chandler yard</div>
+              </div>
+              <div>
+                <div class="equipment-status-pill">
+                  Available · reserved for UPS-B & PDU-3
+                </div>
+              </div>
+              <div>
+                <div class="equipment-status-pill">
+                  Reserved: Diaz & Ramirez
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-footnote">
+              Pitch line: “Foremen tap where a tool moves: Ocotillo → CloudPark
+              → Shop. Over a month you see what’s always ‘lost’ and whether we should
+              buy or rent instead of guessing.”
+            </div>
+          </div>
+
+          <!-- JHA -->
+          <div class="subsection-title">Smart Pre-Task / JHA</div>
+          <div class="jha-card">
+            <div class="schedule-header">
+              <span>JHA · Ocotillo · HALL 3 UPS-B bypass</span>
+              <span class="pill">
+                <span class="pill-dot"></span> Lead: Diaz
+              </span>
+            </div>
+
+            <div class="jha-grid">
+              <div>
+                <div class="jha-column-title">Hazards</div>
+                <div class="jha-chip hazard">Energized gear nearby</div>
+                <div class="jha-chip hazard">Battery strings / DC energy</div>
+                <div class="jha-chip hazard">Trip hazards in cold aisle</div>
+                <div class="jha-chip hazard">Alarm noise / distractions</div>
+              </div>
+              <div>
+                <div class="jha-column-title">Controls</div>
+                <div class="jha-chip control">Test-before-touch on panels</div>
+                <div class="jha-chip control">LOTO with site tech sign-off</div>
+                <div class="jha-chip control">Barricades each aisle end</div>
+                <div class="jha-chip control">Clear radio callouts per step</div>
+              </div>
+            </div>
+
+            <div class="sign-row">
+              <div class="sign-pill">
+                Crew sign-on: Diaz · Lee · Carter · Site tech “Jordan S.”
+              </div>
+              <div class="sign-pill">
+                JHA log: Ocotillo · 2025-12-10 · 19:45
+              </div>
+            </div>
+          </div>
+
+          <!-- DAILY GOALS & PRODUCTION -->
+          <div class="subsection-title">Daily goals & production</div>
+          <div class="goals-card">
+            <div class="goals-row">
+              <div>
+                <div class="schedule-header">
+                  <span>Crew B · CloudPark CP-1</span>
+                  <span>Lead: Ramirez</span>
+                </div>
+                <div style="font-size:0.68rem;">
+                  <strong>Plan</strong>: IR & torque all PDU-3 connections in HALL 1 / 2,
+                  update labels on 2 panels.
+                </div>
+                <div style="font-size:0.68rem; margin-top:3px;">
+                  <strong>Actual</strong>: IR & torque completed in HALL 1 only, labels 1 panel.
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill"></div>
+                </div>
+              </div>
+              <div>
+                <div class="blockers">
+                  <strong>Blockers logged:</strong><br />
+                  <span class="blocker-chip">Stacked trades in HALL 2</span>
+                  <span class="blocker-chip">Waiting on updated prints</span>
+                  <span class="blocker-chip">Panel access delayed by GC</span>
+                </div>
+                <div class="blockers" style="margin-top:5px;">
+                  Pitch line: “Morning they tap the plan. Night they tap what
+                  actually got done and what blocked them. PMs finally see where
+                  time really goes.”
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- PANEL: PEOPLE & TRAINING -->
+      <div class="panel panel-people">
+        <section class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title">People, training & playbook</div>
+              <div class="section-sub">
+                Apprentices, certifications, and quick field task cards in one place.
+              </div>
+            </div>
+          </div>
+
+          <div class="people-grid">
+            <!-- APPRENTICE PROGRESS -->
+            <div class="apprentice-card">
+              <div class="subsection-title">Apprentice progress</div>
+              <div class="apprentice-row">
+                <div class="apprentice-name">Carter · A2</div>
+                <div class="apprentice-task">
+                  Today: conduit runs in data hall, panel terminations (under supervision)
+                </div>
+                <div class="apprentice-level-pill assist">
+                  Assisted → Performed with supervision
+                </div>
+                <div style="font-size:0.62rem; color:var(--text-soft); margin-top:2px;">
+                  Notes: strong with layout and measuring; needs more reps on terminations.
+                </div>
+              </div>
+              <div class="apprentice-row">
+                <div class="apprentice-name">Nguyen · A1</div>
+                <div class="apprentice-task">
+                  Conduit support, labeling, basic print reading in HALL 1.
+                </div>
+                <div class="apprentice-level-pill">
+                  Observed → Assisted
+                </div>
+                <div style="font-size:0.62rem; color:var(--text-soft); margin-top:2px;">
+                  Notes: picks up print symbols quickly; schedule more time on LOTO setup.
+                </div>
+              </div>
+              <div class="apprentice-row">
+                <div class="apprentice-name">Ortiz · A3</div>
+                <div class="apprentice-task">
+                  Cable tray setting & strut leveling on gen yard.
+                </div>
+                <div class="apprentice-level-pill">
+                  Performs with supervision
+                </div>
+                <div style="font-size:0.62rem; color:var(--text-soft); margin-top:2px;">
+                  Notes: ready for independent runs on simpler tray sections.
+                </div>
+              </div>
+            </div>
+
+            <!-- CERTS + PLAYBOOK -->
+            <div>
+              <div class="cert-card">
+                <div class="subsection-title">Training & cert expiry</div>
+                <div class="cert-row">
+                  <div>
+                    <div class="cert-name">Diaz</div>
+                    <div class="cert-tags">
+                      <span class="cert-pill good">OSHA 30 · 2027</span>
+                      <span class="cert-pill expiring">NFPA 70E · Expires in 32 days</span>
+                      <span class="cert-pill good">CloudCore DC badge</span>
+                    </div>
+                  </div>
+                  <div style="font-size:0.62rem; color:var(--text-soft); text-align:right;">
+                    Next 30 days: 70E<br />
+                    Next 60 days: none
+                  </div>
+                </div>
+                <div class="cert-row">
+                  <div>
+                    <div class="cert-name">Ramirez</div>
+                    <div class="cert-tags">
+                      <span class="cert-pill good">OSHA 10 · 2026</span>
+                      <span class="cert-pill expiring">NetSphere DC badge · 45 days</span>
+                    </div>
+                  </div>
+                  <div style="font-size:0.62rem; color:var(--text-soft); text-align:right;">
+                    Needs badge renewal slot before next PDU window.
+                  </div>
+                </div>
+                <div class="cert-row">
+                  <div>
+                    <div class="cert-name">Lewis</div>
+                    <div class="cert-tags">
+                      <span class="cert-pill good">OSHA 30 · 2028</span>
+                      <span class="cert-pill good">Generator vendor training</span>
+                    </div>
+                  </div>
+                  <div style="font-size:0.62rem; color:var(--text-soft); text-align:right;">
+                    No expirations next 60 days.
+                  </div>
+                </div>
+                <div style="margin-top:5px; font-size:0.64rem; color:var(--text-soft);">
+                  Pitch line: “HR can answer ‘who’s good for this data center next
+                  month?’ in one click instead of digging through BambooHR and spreadsheets.”
+                </div>
+              </div>
+
+              <div class="playbook-card" style="margin-top:8px;">
+                <div class="subsection-title">Field “task cards” · 48 playbook</div>
+                <ul class="playbook-list">
+                  <li class="playbook-item">
+                    <div class="playbook-item-title">Data hall receptacle rough-in</div>
+                    <div>Spacing, heights, and label format for CloudCore rows.</div>
+                    <div class="playbook-tag">“The 48 way” · photo + bullets</div>
+                  </li>
+                  <li class="playbook-item">
+                    <div class="playbook-item-title">Setting & leveling cable tray</div>
+                    <div>Max spans, support types, and torque notes.</div>
+                    <div class="playbook-tag">Micro-training · 30 sec check</div>
+                  </li>
+                  <li class="playbook-item">
+                    <div class="playbook-item-title">Panel labeling standards</div>
+                    <div>How we name panels, circuits, and tie into prints.</div>
+                    <div class="playbook-tag">Reduces rework · fewer “renames”</div>
+                  </li>
+                </ul>
+                <div style="margin-top:5px; font-size:0.64rem; color:var(--text-soft);">
+                  Pitch line: “Apprentices can double-check how 48 wants it done
+                  in 30 seconds instead of guessing or doing it the way their last
+                  company did.”
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <label for="tab-console">
+        <span class="icon"></span>
+        DC Console
+      </label>
+      <label for="tab-schedule">
+        <span class="icon"></span>
+        Scheduling
+      </label>
+      <label for="tab-jobs">
+        <span class="icon"></span>
+        Jobs & Field
+      </label>
+      <label for="tab-people">
+        <span class="icon"></span>
+        People & Training
+      </label>
+    </nav>
+  </div>
+
+  <!-- OVERLAYS -->
+  <div id="chg-ocotillo" class="overlay">
+    <div class="overlay-content">
+      <div class="overlay-header">
+        <div>
+          <div class="overlay-title">
+            CHG-2471 · Ocotillo UPS-B bypass & test
+          </div>
+          <div class="overlay-sub">
+            Foreman: Diaz · Campus OC-2 · HALL 3 cold aisle · CloudCore (Gold SLA)
+          </div>
+        </div>
+        <a href="#" class="overlay-close">&times;</a>
+      </div>
+
+      <div class="overlay-grid">
+        <div>
+          <div class="overlay-label">Current plan</div>
+          <div class="overlay-value">
+            20:00–23:30 · full bypass, battery test, IR quick check all in one block.
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">App suggestion</div>
+          <div class="overlay-value">
+            20:00–21:45: full bypass + verify stability<br />
+            23:00–01:00: IR scan + deeper battery trending with smaller crew.
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">Impact (crew / cost)</div>
+          <div class="overlay-value">
+            • Crew A OT: 3.8 → 1.4 hrs<br />
+            • Crew B (CloudPark) stays under 8.0 hrs<br />
+            • Net labor saved tonight: ~ $640
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">Impact (risk / SLA)</div>
+          <div class="overlay-value">
+            • Single-corded racks only on UPS-A during most invasive step<br />
+            • BMS alarms during test tagged “inside planned change” for reports
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay-notes">
+        “The app proposes this before anyone calls you. If you like it, one tap
+        updates dispatch, the foreman’s phone, and the client change ticket.”
+      </div>
+
+      <div class="overlay-footer">
+        <a href="#" class="btn">Preview crew timeline</a>
+        <a href="#" class="btn primary">Apply suggestion</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="chg-cloudpark" class="overlay">
+    <div class="overlay-content">
+      <div class="overlay-header">
+        <div>
+          <div class="overlay-title">
+            CHG-2464 · CloudPark PDU-3 IR scan
+          </div>
+          <div class="overlay-sub">
+            Foreman: Ramirez · CP-1 · HALL 1 / 2 · NetSphere (Standard SLA)
+          </div>
+        </div>
+        <a href="#" class="overlay-close">&times;</a>
+      </div>
+
+      <div class="overlay-grid">
+        <div>
+          <div class="overlay-label">Window</div>
+          <div class="overlay-value">
+            19:00–01:00 · fully flexible · no STS or ATS work this night.
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">Overlap with UPS work</div>
+          <div class="overlay-value">
+            Only tech time overlaps. Power path is independent from Ocotillo UPS-B.
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">Suggestion</div>
+          <div class="overlay-value">
+            Move one tech 22:00–23:30 to support UPS-B, then finish PDU-3 before 01:00.
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">Client communication</div>
+          <div class="overlay-value">
+            NetSphere already has 48-hour notice. They still see one change window
+            even if you shuffle people internally.
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay-notes">
+        “Today this is a group chat and a whiteboard. Here it’s a one-button swap
+        that never loses the MOP, crews, or client emails.”
+      </div>
+
+      <div class="overlay-footer">
+        <a href="#" class="btn">Show who moves</a>
+        <a href="#" class="btn primary">Approve swap</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="chg-goodyear" class="overlay">
+    <div class="overlay-content">
+      <div class="overlay-header">
+        <div>
+          <div class="overlay-title">
+            CHG-2482 · Goodyear Gen-3 load bank test
+          </div>
+          <div class="overlay-sub">
+            Foreman: Lewis · GY-1 · Gen yard · no tenant impact expected
+          </div>
+        </div>
+        <a href="#" class="overlay-close">&times;</a>
+      </div>
+
+      <div class="overlay-grid">
+        <div>
+          <div class="overlay-label">Scope</div>
+          <div class="overlay-value">
+            75% load for 60 mins · then 100% for 30 mins · fuel & alarms check
+            before, during, and after.
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">Risk guardrails</div>
+          <div class="overlay-value">
+            • Utility remains normal during test<br />
+            • ATS testing locked out while this change is open
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">Dependencies</div>
+          <div class="overlay-value">
+            • Fuel level verified today<br />
+            • No generator faults in last 7 days<br />
+            • Last IR scan on main breaker: 26 days ago
+          </div>
+        </div>
+        <div>
+          <div class="overlay-label">Reporting</div>
+          <div class="overlay-value">
+            Load curve and alarms export directly into the customer report – no
+            extra typing at the end of the night.
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay-notes">
+        “Generators, UPS, PDUs — all in one system. The app knows when someone’s
+        testing a gen and keeps anyone else from opening an ATS in the same window.”
+      </div>
+
+      <div class="overlay-footer">
+        <a href="#" class="btn">View test curve</a>
+        <a href="#" class="btn danger">Pause future gen tests</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
