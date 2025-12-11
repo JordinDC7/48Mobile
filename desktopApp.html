@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>48 Electric • Enterprise Ops + HR + Field Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050814;
+      --bg-panel: #101528;
+      --bg-panel-light: #151b31;
+      --accent: #ffb400;
+      --accent2: #4de0ff;
+      --danger: #ff4964;
+      --success: #46d77c;
+      --warn: #ff934b;
+      --text-main: #f6f7ff;
+      --text-muted: #8c94b4;
+      --border: #21263c;
+      --radius: 10px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --radius-pill: 999px;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.65);
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: radial-gradient(circle at top, #1c2754 0, #050814 55%);
+      color: var(--text-main);
+      overflow: hidden;
+    }
+
+    /* HEADER ------------------------------------------------------- */
+    .app-header {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: #070b1b;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 0 0, #ffe9b3, #ffb400 55%, #ff934b 100%);
+      box-shadow:
+        0 0 26px rgba(255, 180, 0, 0.8),
+        0 0 60px rgba(255, 180, 0, 0.45);
+      position: relative;
+    }
+
+    .brand-logo::before,
+    .brand-logo::after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 9px;
+      border: 2px solid rgba(25, 13, 0, 0.95);
+      border-top-color: transparent;
+      border-right-color: transparent;
+      transform: rotate(-22deg);
+    }
+
+    .brand-logo::after {
+      inset: 11px 10px 9px 9px;
+      opacity: 0.6;
+    }
+
+    .brand-text-main {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.94rem;
+    }
+
+    .brand-text-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .persona-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #0b1022;
+      border-radius: var(--radius-pill);
+      padding: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .persona-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 0.76rem;
+      cursor: pointer;
+    }
+
+    .persona-btn.active {
+      background: linear-gradient(135deg, #ffb400, #ff934b);
+      color: #281507;
+      font-weight: 600;
+      box-shadow: 0 0 14px rgba(255, 180, 0, 0.7);
+    }
+
+    .user-box {
+      border-radius: var(--radius-pill);
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      background: #0f1427;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 12px rgba(70, 215, 124, 1);
+    }
+
+    .integration-pill {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .integration-pill span {
+      color: var(--accent2);
+    }
+
+    /* LAYOUT ------------------------------------------------------- */
+    .sidebar {
+      position: absolute;
+      top: 64px;
+      left: 0;
+      bottom: 0;
+      width: 250px;
+      background: #070b1b;
+      border-right: 1px solid var(--border);
+      padding: 10px 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      padding: 6px 18px 4px;
+    }
+
+    .nav-item {
+      padding: 10px 18px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 2px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: #10152a;
+      color: var(--accent);
+    }
+
+    .nav-item.active {
+      background: #11172f;
+      border-left-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .nav-item span.badge-pill {
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(77, 224, 255, 0.14);
+      color: var(--accent2);
+    }
+
+    .main {
+      position: absolute;
+      top: 64px;
+      left: 250px;
+      right: 0;
+      bottom: 0;
+      padding: 18px;
+      overflow-y: auto;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* PANELS ------------------------------------------------------- */
+    .panel {
+      background: var(--bg-panel);
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .panel-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .panel-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #11172b;
+      color: var(--text-main);
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      border-color: rgba(255, 180, 0, 0.95);
+      background: linear-gradient(135deg, #ffb400, #ff934b);
+      color: #291504;
+      font-weight: 600;
+    }
+
+    .btn-ghost {
+      border-style: dashed;
+      color: var(--text-muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr;
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #11162a;
+      padding: 10px 11px;
+      font-size: 0.8rem;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .stat-value {
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    .stat-delta {
+      font-size: 0.7rem;
+      margin-top: 2px;
+    }
+
+    .stat-delta.good { color: var(--success); }
+    .stat-delta.bad { color: var(--danger); }
+
+    /* TABLE -------------------------------------------------------- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      padding: 7px 8px;
+      text-align: left;
+    }
+
+    th {
+      background: #181f39;
+      color: var(--accent2);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.76rem;
+    }
+
+    tr:nth-child(even) td {
+      background: #10162d;
+    }
+
+    td {
+      border-bottom: 1px solid #181e35;
+    }
+
+    .badge {
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .badge.success { background: rgba(70,215,124,0.16); color: var(--success); }
+    .badge.danger { background: rgba(255,73,100,0.16); color: var(--danger); }
+    .badge.warn { background: rgba(255,147,75,0.16); color: var(--warn); }
+    .badge.info { background: rgba(77,224,255,0.16); color: var(--accent2); }
+
+    /* DASHBOARD PERSONA VIEWS -------------------------------------- */
+    .persona-view {
+      display: none;
+    }
+
+    .persona-view.active {
+      display: block;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent2);
+    }
+
+    .pill-dot.red { background: var(--danger); }
+    .pill-dot.green { background: var(--success); }
+
+    /* SCHEDULING BOARD --------------------------------------------- */
+    .scheduler-grid {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 14px;
+    }
+
+    .people-list,
+    .job-list {
+      background: var(--bg-panel-light);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 10px;
+    }
+
+    .people-list h4,
+    .job-list h4 {
+      margin: 3px 0 8px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .draggable {
+      background: #141a33;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 7px 8px;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+      cursor: grab;
+    }
+
+    .job-panel {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #0f1426;
+      padding: 8px;
+      margin-bottom: 8px;
+    }
+
+    .job-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .job-meta {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .dropzone {
+      margin-top: 6px;
+      padding: 6px;
+      min-height: 70px;
+      border-radius: var(--radius);
+      border: 2px dashed #31395c;
+      background: #080d21;
+      font-size: 0.72rem;
+    }
+
+    .dropzone .draggable {
+      cursor: default;
+    }
+
+    .schedule-output {
+      margin-top: 10px;
+      background: #0e1324;
+      border-radius: var(--radius);
+      border: 1px dashed var(--border);
+      padding: 10px;
+      font-size: 0.77rem;
+      color: var(--text-muted);
+    }
+
+    /* FIELD OPS ---------------------------------------------------- */
+    .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .flex-col {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .note {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* MODALS ------------------------------------------------------- */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-inner {
+      width: min(640px, 96vw);
+      max-height: 80vh;
+      overflow-y: auto;
+      background: var(--bg-panel);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      padding: 16px 18px 14px;
+      box-shadow: var(--shadow);
+      font-size: 0.8rem;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #10162a;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .modal-body p {
+      margin: 4px 0;
+    }
+
+    .modal-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    /* HR/INTEGRATIONS --------------------------------------------- */
+    .timeline {
+      font-size: 0.76rem;
+      border-left: 1px dashed var(--border);
+      padding-left: 10px;
+      margin-top: 6px;
+    }
+
+    .timeline-item {
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -11px;
+      top: 4px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent2);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .chip-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* SCROLLBAR (for nicer desktop look) --------------------------- */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050814;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2a3150;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b4470;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 210px;
+      }
+      .main {
+        left: 210px;
+      }
+      .grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .scheduler-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .sidebar {
+        display: none;
+      }
+      .main {
+        left: 0;
+      }
+      .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-logo"></div>
+      <div>
+        <div class="brand-text-main">48 Electric</div>
+        <div class="brand-text-sub">Enterprise Ops + HR + Field Control</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="persona-switch">
+        <button class="persona-btn active" data-persona="exec">Exec</button>
+        <button class="persona-btn" data-persona="pm">PM</button>
+        <button class="persona-btn" data-persona="hr">HR</button>
+        <button class="persona-btn" data-persona="field">Field</button>
+      </div>
+      <div class="user-box">
+        <span class="user-dot"></span>
+        Alex · CAO
+      </div>
+      <div class="integration-pill">
+        Integrations: <span>Teams</span> · <span>Knowify</span> · <span>BambooHR</span> · <span>DCIM/BMS</span> (API-ready)
+      </div>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section-title">Overview</div>
+    <div class="nav-item active" data-target="sec-dashboard">
+      Exec / PM Overview
+      <span class="badge-pill">Live</span>
+    </div>
+
+    <div class="sidebar-section-title">Planning & Field</div>
+    <div class="nav-item" data-target="sec-schedule">Daily Scheduling Board</div>
+    <div class="nav-item" data-target="sec-fieldops">Field Ops: Tools · JHA · Output</div>
+
+    <div class="sidebar-section-title">People & HR</div>
+    <div class="nav-item" data-target="sec-hrtraining">HR + Apprentices + Training</div>
+
+    <div class="sidebar-section-title">Automation Layer</div>
+    <div class="nav-item" data-target="sec-integrations">Integrations & Automations</div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <!-- DASHBOARD SECTION -->
+    <section id="sec-dashboard" class="section active">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Executive / PM Control Center</div>
+            <div class="panel-subtitle">
+              One place to see tonight’s change risk, tool accountability, apprentice pipeline,
+              and future automation hooks into Teams, Knowify, and Bamboo.
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn btn-primary" onclick="openModal('modal-leadership')">
+              Preview daily leadership email
+            </button>
+            <button class="btn btn-ghost" onclick="openModal('modal-roi')">
+              View time-savings breakdown
+            </button>
+          </div>
+        </div>
+
+        <!-- Persona-specific dashboards -->
+        <div class="persona-view persona-exec active">
+          <div class="grid-3">
+            <div class="stat-card">
+              <div class="stat-label">Hours saved this week (CAO / PM / HR)</div>
+              <div class="stat-value">18.5 hrs</div>
+              <div class="stat-delta good">+ Based on boards, JHAs, and cert reminders automated</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">High-risk changes tonight</div>
+              <div class="stat-value">
+                2 <span class="badge danger">UPS / STS work</span>
+              </div>
+              <div class="stat-delta">All have JHAs & tool assignments logged</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Tools “missing” > 24 hrs</div>
+              <div class="stat-value">3</div>
+              <div class="stat-delta bad">Currently invisible in other systems</div>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 14px;">
+            <div class="stat-card">
+              <div class="stat-label">Next 30 days · training & access risk</div>
+              <div class="stat-value">
+                11 <span class="badge warn">Certs expiring</span>
+              </div>
+              <p class="note">
+                OSHA / 70E / site access pulled from Bamboo snapshot; this app turns it into a
+                calendar of training events instead of a spreadsheet that gets ignored.
+              </p>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Apprentice pipeline</div>
+              <div class="stat-value">
+                4 <span class="badge success">ready for promotion</span>
+              </div>
+              <p class="note">
+                Based on real task history (conduit, terminations, prints) instead of memory or “who was on my last job”.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="persona-view persona-pm">
+          <div class="grid-3">
+            <div class="stat-card">
+              <div class="stat-label">Jobs this week missing a committed date</div>
+              <div class="stat-value">7</div>
+              <div class="stat-delta bad">Flagged so PMs aren’t surprised on Friday</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Change orders with hourly risk</div>
+              <div class="stat-value">
+                5 <span class="badge warn">margin at risk</span>
+              </div>
+              <div class="stat-delta">Automation: push updated budgets into Knowify</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Days this week with stacked trades issues</div>
+              <div class="stat-value">3 of 5</div>
+              <div class="stat-delta">Shows up via daily production logs, not guessing</div>
+            </div>
+          </div>
+          <p class="note" style="margin-top:10px;">
+            PM pitch: “When I finish my day, I log what actually got done and why. The system
+            rolls that into risk, dates, and suggested change orders instead of me manually updating three places.”
+          </p>
+        </div>
+
+        <div class="persona-view persona-hr">
+          <div class="grid-3">
+            <div class="stat-card">
+              <div class="stat-label">Certifications expiring ≤ 30 days</div>
+              <div class="stat-value">
+                11 <span class="badge.warn badge">needs scheduling</span>
+              </div>
+              <div class="stat-delta">
+                One click → push refresh training invites to Teams.
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Apprentices with incomplete safety tasks</div>
+              <div class="stat-value">6</div>
+              <div class="stat-delta bad">
+                Gaps: LOTO practice, energized work observations not logged.
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Open headcount requests (from PMs)</div>
+              <div class="stat-value">3</div>
+              <div class="stat-delta">
+                Mapped directly to projects and crews, not generic “need more people” emails.
+              </div>
+            </div>
+          </div>
+          <p class="note" style="margin-top:10px;">
+            HR pitch: “I can see who is safe to send where, what training is due, and how that lines up to jobs,
+            without logging into five systems.”
+          </p>
+        </div>
+
+        <div class="persona-view persona-field">
+          <div class="grid-3">
+            <div class="stat-card">
+              <div class="stat-label">Open JHAs needing signatures</div>
+              <div class="stat-value">4</div>
+              <div class="stat-delta">Crew signs on phone; HR sees it automatically.</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Tools flagged “ask at start of shift”</div>
+              <div class="stat-value">
+                3 <span class="badge warn">follow-up</span>
+              </div>
+              <div class="stat-delta bad">Ladders / testers that disappear in other systems.</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Average commute for tomorrow’s board</div>
+              <div class="stat-value">27 min</div>
+              <div class="stat-delta good">
+                App suggests swapping two people to cut OT driving but keep skills aligned.
+              </div>
+            </div>
+          </div>
+          <p class="note" style="margin-top:10px;">
+            Field pitch: “I see where I’m going, what tools I’m responsible for, the JHA, and tomorrow’s goal, in one place.
+            I don’t have to chase HR or PMs for basic info.”
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCHEDULING SECTION -->
+    <section id="sec-schedule" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Daily Scheduling Board + Auto-Messages</div>
+            <div class="panel-subtitle">
+              Drag names onto jobs once; the system prepares Teams messages, text summaries,
+              and Knowify job updates automatically.
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn" onclick="openModal('modal-teams')">Preview Teams summary</button>
+            <button class="btn btn-primary" onclick="openModal('modal-schedule-roi')">
+              Show “time saved” story
+            </button>
+          </div>
+        </div>
+
+        <div class="scheduler-grid">
+          <!-- PEOPLE -->
+          <div class="people-list">
+            <h4>Available workers · Phoenix region</h4>
+            <div class="draggable" draggable="true">Mike D · Foreman · OC-2</div>
+            <div class="draggable" draggable="true">Jose R · Journeyman · CP-1</div>
+            <div class="draggable" draggable="true">Kevin L · Apprentice · CP-1</div>
+            <div class="draggable" draggable="true">Brian C · Journeyman · GY-1</div>
+            <div class="draggable" draggable="true">Anthony S · Apprentice · swing</div>
+          </div>
+
+          <!-- JOBS -->
+          <div class="job-list">
+            <h4>Tomorrow’s jobs · Thu (Phoenix)</h4>
+
+            <div class="job-panel">
+              <div class="job-title">Ocotillo · UPS-B bypass + battery test</div>
+              <div class="job-meta">CHG-3217 · 20:00–23:30 · HALL 3 · CloudCore (Gold)</div>
+              <div class="dropzone" data-job="ocotillo">
+                Drop crew here…
+              </div>
+            </div>
+
+            <div class="job-panel">
+              <div class="job-title">Mesa CloudPark · PDU-3 IR scan & torque</div>
+              <div class="job-meta">CHG-3224 · 07:00–13:00 · HALL 1/2 · NetSphere</div>
+              <div class="dropzone" data-job="cloudpark">
+                Drop crew here…
+              </div>
+            </div>
+
+            <div class="job-panel">
+              <div class="job-title">Goodyear Edge · Gen-3 load bank test</div>
+              <div class="job-meta">CHG-3230 · 18:30–21:00 · yard · CloudCore</div>
+              <div class="dropzone" data-job="goodyear">
+                Drop crew here…
+              </div>
+            </div>
+
+            <div class="schedule-output" id="scheduleOutput">
+              <strong>Auto-generated: Schedule messages & Teams summary</strong><br />
+              Drag a few names onto jobs and this area updates to show the exact text that would go
+              to Teams or SMS. In the real app, this would be one click to send instead of 20 minutes
+              of manual formatting.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIELD OPS SECTION -->
+    <section id="sec-fieldops" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Field Ops · Tools · JHA · Daily Output</div>
+            <div class="panel-subtitle">
+              This is where foremen actually live: tools, JHAs, and daily production — tied back
+              to HR and PM dashboards automatically.
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn" onclick="openModal('modal-field-story')">
+              How this replaces 3 existing tools
+            </button>
+          </div>
+        </div>
+
+        <div class="flex-row">
+          <!-- EQUIPMENT -->
+          <div class="flex-col">
+            <h4>Tool & Equipment Tracker</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Equipment</th>
+                  <th>Site</th>
+                  <th>Assigned</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Load bank #2</td>
+                  <td>GY-1</td>
+                  <td>Lewis</td>
+                  <td><span class="badge info">In use</span></td>
+                </tr>
+                <tr>
+                  <td>Thermal camera #4</td>
+                  <td>OC-2</td>
+                  <td>Diaz</td>
+                  <td><span class="badge success">Accounted</span></td>
+                </tr>
+                <tr>
+                  <td>10' fiberglass ladder L-12</td>
+                  <td>Last: OC-2</td>
+                  <td>—</td>
+                  <td><span class="badge warn">Ask crew at start</span></td>
+                </tr>
+                <tr>
+                  <td>Megger tester M-03</td>
+                  <td>Unknown</td>
+                  <td>—</td>
+                  <td><span class="badge danger">Missing 3 days</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="note">
+              Tools move OC-2 → CP-1 → yard. In this app that movement is tapped once on a phone
+              and becomes history HR and PM can actually use.
+            </p>
+          </div>
+
+          <!-- JHA -->
+          <div class="flex-col">
+            <h4>Smart JHA · Ocotillo UPS-B</h4>
+            <div class="chip-label">Hazards selected</div>
+            <div style="margin:4px 0 6px;">
+              <span class="chip"><span class="pill-dot.red pill-dot"></span> Energized gear nearby</span>
+              <span class="chip"><span class="pill-dot.red pill-dot"></span> Battery strings / DC energy</span>
+              <span class="chip"><span class="pill-dot.red pill-dot"></span> Trip hazards in cold aisle</span>
+            </div>
+
+            <div class="chip-label">Controls selected</div>
+            <div style="margin:4px 0 6px;">
+              <span class="chip"><span class="pill-dot pill-dot"></span> Test-before-touch</span>
+              <span class="chip"><span class="pill-dot pill-dot"></span> LO/TO with site tech sign-off</span>
+              <span class="chip"><span class="pill-dot pill-dot"></span> Barricades at aisle ends</span>
+              <span class="chip"><span class="pill-dot pill-dot"></span> Radio callouts per step</span>
+            </div>
+
+            <p class="note">
+              Foreman taps hazards + controls, crew signs on the phone. HR gets a JHA record,
+              safety sees trends, PMs see which tasks are consistently risky.
+            </p>
+
+            <h4 style="margin-top:14px;">Daily Goals & Production</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Crew</th>
+                  <th>Goal</th>
+                  <th>Actual</th>
+                  <th>Blockers</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Crew A</td>
+                  <td>Rough 12 rooms</td>
+                  <td>10</td>
+                  <td>Material delay (conduit)</td>
+                </tr>
+                <tr>
+                  <td>Crew B</td>
+                  <td>Set 4 panels</td>
+                  <td>4</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Crew C</td>
+                  <td>Pull feeders A3</td>
+                  <td>75%</td>
+                  <td>Stacked trades</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="note">
+              These “blockers” roll up to PM / Exec to show where margin disappears: materials,
+              stacked trades, access. No one has to build that report by hand.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HR / TRAINING SECTION -->
+    <section id="sec-hrtraining" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">HR + Apprentices + Training (Field-aware)</div>
+            <div class="panel-subtitle">
+              HR view that actually knows what people do in the field: skills, safety tasks,
+              certs, training, and who is ready for more responsibility.
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn" onclick="openModal('modal-hr-bamboo')">
+              Show Bamboo → 48 Electric import
+            </button>
+            <button class="btn btn-primary" onclick="openModal('modal-training-teams')">
+              Preview training reminders to Teams
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Apprentice matrix -->
+          <div>
+            <h4>Apprentice skill tracker</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Prints</th>
+                  <th>Conduit</th>
+                  <th>Terminations</th>
+                  <th>Field notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Kevin L (A2)</td>
+                  <td><span class="badge success">Independent</span></td>
+                  <td><span class="badge warn">Assisted</span></td>
+                  <td><span class="badge warn">Assisted</span></td>
+                  <td>Great with layout; needs more lug reps.</td>
+                </tr>
+                <tr>
+                  <td>Anthony S (A1)</td>
+                  <td><span class="badge warn">Assisted</span></td>
+                  <td><span class="badge success">Independent</span></td>
+                  <td><span class="badge warn">Assisted</span></td>
+                  <td>Fast; needs practice on prints + safety briefings.</td>
+                </tr>
+                <tr>
+                  <td>Nguyen (A1)</td>
+                  <td><span class="badge warn">Assisted</span></td>
+                  <td><span class="badge.warn badge">Observed</span></td>
+                  <td><span class="badge.danger badge">Needs supervision</span></td>
+                  <td>Strong on labeling standards; early with LOTO.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="note">
+              Instead of “who feels ready?”, HR and PMs can see what tasks apprentices have actually
+              done and at what level.
+            </p>
+          </div>
+
+          <!-- Certs + training -->
+          <div>
+            <h4>Training & certification expiry</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Cert</th>
+                  <th>Expires</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Diaz</td>
+                  <td>NFPA 70E</td>
+                  <td>2025-01-22</td>
+                  <td><span class="badge danger">Urgent (30d)</span></td>
+                </tr>
+                <tr>
+                  <td>Ramirez</td>
+                  <td>NetSphere site badge</td>
+                  <td>2025-02-14</td>
+                  <td><span class="badge warn">Soon</span></td>
+                </tr>
+                <tr>
+                  <td>Lewis</td>
+                  <td>OSHA 30</td>
+                  <td>2028-03-01</td>
+                  <td><span class="badge success">OK</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="timeline">
+              <div class="timeline-item">
+                <strong>Tomorrow 09:00</strong> — Draft training invites for Diaz & Ramirez
+                (Teams calendar, prefilled with site they support).
+              </div>
+              <div class="timeline-item">
+                <strong>Next week</strong> — HR sees “training impact” on job coverage (which crews are affected).
+              </div>
+            </div>
+
+            <h4 style="margin-top:12px;">Field “Task Cards” · 48 playbook</h4>
+            <p class="note">
+              These are accessible from phones, right where the JHAs and jobs are:
+            </p>
+            <ul style="font-size:0.78rem; color:var(--text-muted); padding-left:18px; margin-top:4px;">
+              <li>Data hall receptacle rough-in (“the 48 way”).</li>
+              <li>Setting / leveling cable tray with torque specs.</li>
+              <li>Panel labeling standards matching prints and client expectations.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTEGRATIONS / AUTOMATIONS SECTION -->
+    <section id="sec-integrations" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Integration & Automation Blueprint</div>
+            <div class="panel-subtitle">
+              How this app saves the CAO, PMs, and CEO real time by sitting on top of Teams,
+              Knowify, BambooHR, and DCIM/BMS — instead of being “just another place to click”.
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn" onclick="openModal('modal-api-story')">Explain API story (pitch)</button>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <h4>System integrations (fake data, real flows)</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>System</th>
+                  <th>Data used</th>
+                  <th>Time saved / week</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Microsoft Teams</td>
+                  <td>Daily schedule, JHA links, training invites</td>
+                  <td>4–6 hrs (CAO + dispatch)</td>
+                </tr>
+                <tr>
+                  <td>Knowify</td>
+                  <td>Job numbers, budgets, change orders</td>
+                  <td>3–5 hrs (PM manual updates)</td>
+                </tr>
+                <tr>
+                  <td>BambooHR</td>
+                  <td>Employees, certs, role / site access</td>
+                  <td>2–3 hrs (HR hunting in spreadsheets)</td>
+                </tr>
+                <tr>
+                  <td>DCIM / BMS</td>
+                  <td>Change windows, alarms, hall status</td>
+                  <td>2–4 hrs (reducing call-and-confirm time)</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="note">
+              The value: 48 Electric keeps ownership of its own data and workflows, and this
+              layer makes the external tools feel like one system instead of four.
+            </p>
+          </div>
+
+          <div>
+            <h4>Tonight’s automation queue (simulated)</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Action</th>
+                  <th>System</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>17:05</td>
+                  <td>Send tomorrow’s schedule by crew</td>
+                  <td>Teams</td>
+                  <td><span class="badge success">Ready</span></td>
+                </tr>
+                <tr>
+                  <td>17:10</td>
+                  <td>Update Knowify job budgets with OT forecast</td>
+                  <td>Knowify</td>
+                  <td><span class="badge info">Simulated</span></td>
+                </tr>
+                <tr>
+                  <td>17:15</td>
+                  <td>Post JHA summary and sign-off stats</td>
+                  <td>Teams · Safety channel</td>
+                  <td><span class="badge info">Simulated</span></td>
+                </tr>
+                <tr>
+                  <td>17:20</td>
+                  <td>Email leadership summary (Exec / PM / HR views)</td>
+                  <td>Email</td>
+                  <td><span class="badge success">Ready</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="note">
+              You can tell the CAO: “Every one of these used to be a person’s job at the end
+              of the day. This is how I give those hours back to you.”
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODALS -->
+  <div id="modal-teams" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Preview — Teams summary message</div>
+          <div class="panel-subtitle">
+            This is what would be pushed to Teams automatically after you drag crews onto the board.
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-teams')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Channel:</strong> 48 Electric · Phoenix · Night Ops</p>
+        <p><strong>Message:</strong></p>
+        <pre style="background:#0c1123; padding:8px 10px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; font-size:0.78rem;">
+Tonight's plan — Ocotillo / CloudPark / Goodyear
+
+Crew A — Lead: Diaz
+• 06:00 – Ocotillo OC-2 — HALL 3 UPS-B prep & walkdown
+• 20:00 – Ocotillo — UPS-B bypass & battery test (CHG-3217)
+Tools: IR #4, ladder L-12, bypass lock set
+
+Crew B — Lead: Ramirez
+• 07:00 – Mesa CloudPark CP-1 — PDU-3 IR scan & torque (CHG-3224)
+Tools: IR #2, torque kit
+
+Crew C — Lead: Lewis
+• 18:30 – Goodyear GY-1 — Gen-3 load bank test (CHG-3230)
+Tools: load bank #2
+
+JHAs & MOPs are attached to each job card in the app (same system).
+        </pre>
+        <p class="note">
+          Demo line: “Scheduling happens once here, and this is auto-posted. No copy-paste into
+          Teams, no last-minute scrambling.”
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-teams')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-schedule-roi" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Scheduling — time saved</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-schedule-roi')">✕</button>
+      </div>
+      <div class="modal-body">
+        <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
+          <li>CAO / dispatcher: ~30–45 min per day building and sending the schedule.</li>
+          <li>PMs: another ~10–15 min re-explaining where people were scheduled and why.</li>
+          <li>Field: 5–10 min of “where am I again / where’s the address / what tools?” per person.</li>
+        </ul>
+        <p>
+          This board centralizes all of that — schedule, addresses, JHAs, tool assignments — and
+          generates the messaging. The combined savings is easily 8–10 hours per week company-wide.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-schedule-roi')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-field-story" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Field Ops story</div>
+        <button class="modal-close" onclick="closeModal('modal-field-story')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Right now, tools, JHAs, and daily production live in separate places (or not at all).
+          When something goes wrong — a near-miss, an upset client, missing tools — someone has to
+          reconstruct the night from memory.
+        </p>
+        <p>
+          This screen means:
+        </p>
+        <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
+          <li>Every critical job has a JHA tied to it, with signatures and controls selected.</li>
+          <li>Every tool move is a quick tap, building a history you can actually trust.</li>
+          <li>Daily “goal vs actual” logs roll up to PM / Exec dashboards and change orders.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-field-story')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-hr-bamboo" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">HR & BambooHR link</div>
+        <button class="modal-close" onclick="closeModal('modal-hr-bamboo')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          In the real implementation, BambooHR would remain the source of truth for people,
+          dates, and base certifications.
+        </p>
+        <p>
+          This app would:
+        </p>
+        <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
+          <li>Pull that data nightly (read-only).</li>
+          <li>Layer on field-level skills, JHA history, and task cards completed.</li>
+          <li>Show HR exactly who is both certified and field-ready for a given site / client.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-hr-bamboo')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-training-teams" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Training reminders — Teams example</div>
+        <button class="modal-close" onclick="closeModal('modal-training-teams')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre style="background:#0c1123; padding:8px 10px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; font-size:0.78rem;">
+HR → Teams · 48 Electric · Training
+
+Next 30 days — expiring certs:
+
+• Diaz — NFPA 70E (expires 2025-01-22)
+  Suggested session: Mon 2025-01-12 · 09:00–11:00 · Chandler training room
+
+• Ramirez — NetSphere DC badge (expires 2025-02-14)
+  Suggested session: Tue 2025-01-20 · 13:00–15:00 · NetSphere site office
+
+• 3 others — OSHA 10 refresh within 90 days
+
+This app pre-builds these messages and calendar invites based on cert data + project load.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-training-teams')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-api-story" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">API / integration story (for CAO / CEO)</div>
+        <button class="modal-close" onclick="closeModal('modal-api-story')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          The point isn’t to replace Teams, Knowify, or Bamboo — it’s to make them feel like
+          one system that works the way 48 Electric actually runs jobs.
+        </p>
+        <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
+          <li><strong>Teams:</strong> this app publishes schedules, JHAs, and training reminders into
+              the channels you already use.</li>
+          <li><strong>Knowify:</strong> job numbers and budgets come from Knowify; this app sends back
+              updated time, OT forecasts, and blockers.</li>
+          <li><strong>BambooHR:</strong> remains the people system; this app adds field-skills and
+              job-specific readiness for data center work.</li>
+          <li><strong>DCIM / BMS:</strong> gives change windows and alarms; this app applies that to
+              where you send crews and what MOPs / JHAs are required.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-api-story')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-leadership" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Daily leadership email (preview)</div>
+        <button class="modal-close" onclick="closeModal('modal-leadership')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre style="background:#0c1123; padding:8px 10px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; font-size:0.78rem;">
+Subject: 48 Electric — Phoenix DC overview (tonight)
+
+Exec summary:
+• 2 high-risk changes (UPS / STS) — all with JHAs, tools, and crews assigned.
+• Forecast OT tonight: 2.3 hrs (down from typical 7–8 hrs).
+• Tools missing >24 hrs: 3 (ladder L-12, Megger M-03, one temp power spider).
+
+PM highlights:
+• 7 jobs this week still lack committed dates.
+• 5 change orders have margin risk based on "goal vs actual" logs.
+• Stacked trades impacted 3 of 5 days this week (panels / feeders).
+
+HR & training:
+• 11 certs expiring ≤ 30 days (NFPA 70E, site access, OSHA refresh).
+• 4 apprentices flagged as "ready for more responsibility" based on tasks completed.
+
+Field-ready:
+• All night crews see: job, address, JHA, tools, and targets in a single app screen.
+• Teams messages are generated automatically from the same data.
+
+— Generated by the 48 Electric Ops + HR + Field system.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-leadership')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-roi" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Rough time / cost impact (demo numbers)</div>
+        <button class="modal-close" onclick="closeModal('modal-roi')">✕</button>
+      </div>
+      <div class="modal-body">
+        <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
+          <li>Scheduling + messaging: 8–10 hrs/week → 2–3 hrs/week with automation.</li>
+          <li>HR + cert tracking: 2–3 hrs/week hunting in spreadsheets → 30 min/week.</li>
+          <li>PM reporting: 3–5 hrs/week building margin / risk reports by hand → 1 hr/week.</li>
+        </ul>
+        <p>
+          Even at a blended $50/hr loaded cost, that’s easily $1,500–$2,000/month in recovered capacity,
+          plus better client outcomes and fewer “we didn’t know that was expiring” surprises.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-roi')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sidebar navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        const target = item.dataset.target;
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(target).classList.add('active');
+      });
+    });
+
+    // Persona switching for dashboard
+    document.querySelectorAll('.persona-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const persona = btn.dataset.persona;
+        document.querySelectorAll('.persona-view').forEach(view => {
+          view.classList.remove('active');
+          if (view.classList.contains('persona-' + persona)) {
+            view.classList.add('active');
+          }
+        });
+      });
+    });
+
+    // Drag & drop for scheduling
+    const draggables = document.querySelectorAll('.draggable');
+    const dropzones = document.querySelectorAll('.dropzone');
+    const scheduleOutput = document.getElementById('scheduleOutput');
+
+    draggables.forEach(el => {
+      el.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', el.textContent.trim());
+      });
+    });
+
+    const assignments = {
+      ocotillo: [],
+      cloudpark: [],
+      goodyear: []
+    };
+
+    dropzones.forEach(zone => {
+      zone.addEventListener('dragover', e => e.preventDefault());
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        const text = e.dataTransfer.getData('text/plain');
+        if (!text) return;
+        const clone = document.createElement('div');
+        clone.textContent = text;
+        clone.className = 'draggable';
+        clone.draggable = false;
+        zone.appendChild(clone);
+
+        const jobKey = zone.dataset.job;
+        if (jobKey && assignments[jobKey]) {
+          if (!assignments[jobKey].includes(text)) {
+            assignments[jobKey].push(text);
+          }
+        }
+        updateScheduleOutput();
+      });
+    });
+
+    function updateScheduleOutput() {
+      const lines = [];
+      lines.push('Auto-generated preview (would send to Teams / SMS):');
+      lines.push('');
+      if (assignments.ocotillo.length) {
+        lines.push('Ocotillo · UPS-B bypass & battery test (CHG-3217)');
+        lines.push('Crew: ' + assignments.ocotillo.join(', '));
+        lines.push('• 20:00–23:30 · HALL 3 · CloudCore (Gold)');
+        lines.push('');
+      }
+      if (assignments.cloudpark.length) {
+        lines.push('Mesa CloudPark · PDU-3 IR scan & torque (CHG-3224)');
+        lines.push('Crew: ' + assignments.cloudpark.join(', '));
+        lines.push('• 07:00–13:00 · HALL 1/2 · NetSphere');
+        lines.push('');
+      }
+      if (assignments.goodyear.length) {
+        lines.push('Goodyear Edge · Gen-3 load bank test (CHG-3230)');
+        lines.push('Crew: ' + assignments.goodyear.join(', '));
+        lines.push('• 18:30–21:00 · yard · CloudCore');
+        lines.push('');
+      }
+      if (!lines.length || lines.length <= 2) {
+        scheduleOutput.innerHTML =
+          '<strong>Auto-generated: Schedule messages & Teams summary</strong><br />' +
+          'Drag a few names onto jobs and this area updates to show the exact text that would go ' +
+          'to Teams or SMS. In the real app, this would be one click to send instead of 20 minutes ' +
+          'of manual formatting.';
+      } else {
+        scheduleOutput.innerHTML =
+          '<pre style="white-space:pre-wrap; font-size:0.78rem; margin:0;">' +
+          lines.join('\\n') +
+          '</pre>';
+      }
+    }
+
+    // Modal helpers
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    }
+
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+  </script>
+</body>
+</html>
