@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>48 Electric • Enterprise Ops + HR + Field Demo</title>
+  <title>48 Electric Control Tower — Data Center Ops Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
       --bg: #050814;
-      --bg-panel: #101528;
-      --bg-panel-light: #151b31;
+      --bg-panel: #0f1426;
+      --bg-panel-soft: #151b31;
       --accent: #ffb400;
       --accent2: #4de0ff;
       --danger: #ff4964;
@@ -16,28 +16,25 @@
       --warn: #ff934b;
       --text-main: #f6f7ff;
       --text-muted: #8c94b4;
-      --border: #21263c;
+      --border: #232842;
       --radius: 10px;
       --radius-lg: 18px;
-      --radius-xl: 24px;
       --radius-pill: 999px;
-      --shadow: 0 18px 45px rgba(0, 0, 0, 0.65);
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
       --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: var(--font);
-      background: radial-gradient(circle at top, #1c2754 0, #050814 55%);
+      background: radial-gradient(circle at top, #222f63 0, #050814 55%);
       color: var(--text-main);
       overflow: hidden;
     }
 
-    /* HEADER ------------------------------------------------------- */
+    /* HEADER ------------------------------------------------------ */
     .app-header {
       height: 64px;
       display: flex;
@@ -61,11 +58,12 @@
       width: 34px;
       height: 34px;
       border-radius: 12px;
-      background: radial-gradient(circle at 0 0, #ffe9b3, #ffb400 55%, #ff934b 100%);
+      background: radial-gradient(circle at 0 0, #fff1c4, #ffb400 55%, #ff934b 100%);
       box-shadow:
-        0 0 26px rgba(255, 180, 0, 0.8),
+        0 0 26px rgba(255, 180, 0, 0.9),
         0 0 60px rgba(255, 180, 0, 0.45);
       position: relative;
+      animation: pulse 3s ease-in-out infinite;
     }
 
     .brand-logo::before,
@@ -85,14 +83,14 @@
       opacity: 0.6;
     }
 
-    .brand-text-main {
+    .brand-title {
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-size: 0.94rem;
+      font-size: 0.92rem;
     }
 
-    .brand-text-sub {
+    .brand-sub {
       font-size: 0.75rem;
       color: var(--text-muted);
     }
@@ -107,7 +105,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      background: #0b1022;
+      background: #0b1023;
       border-radius: var(--radius-pill);
       padding: 4px;
       border: 1px solid var(--border);
@@ -121,11 +119,17 @@
       border-radius: var(--radius-pill);
       font-size: 0.76rem;
       cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    }
+
+    .persona-btn:hover {
+      color: var(--accent);
+      transform: translateY(-1px);
     }
 
     .persona-btn.active {
       background: linear-gradient(135deg, #ffb400, #ff934b);
-      color: #281507;
+      color: #291404;
       font-weight: 600;
       box-shadow: 0 0 14px rgba(255, 180, 0, 0.7);
     }
@@ -140,6 +144,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      white-space: nowrap;
     }
 
     .user-dot {
@@ -153,13 +158,26 @@
     .integration-pill {
       font-size: 0.7rem;
       color: var(--text-muted);
+      max-width: 210px;
+      text-align: right;
     }
 
-    .integration-pill span {
-      color: var(--accent2);
+    .integration-pill span { color: var(--accent2); }
+
+    /* Mobile nav toggle */
+    .nav-toggle {
+      display: none;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #0f1427;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-left: 8px;
     }
 
-    /* LAYOUT ------------------------------------------------------- */
+    /* LAYOUT ------------------------------------------------------ */
     .sidebar {
       position: absolute;
       top: 64px;
@@ -168,7 +186,7 @@
       width: 250px;
       background: #070b1b;
       border-right: 1px solid var(--border);
-      padding: 10px 0;
+      padding: 10px 0 18px;
       overflow-y: auto;
     }
 
@@ -189,10 +207,11 @@
       justify-content: space-between;
       align-items: center;
       border-left: 2px solid transparent;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
     }
 
     .nav-item:hover {
-      background: #10152a;
+      background: #10152b;
       color: var(--accent);
     }
 
@@ -202,12 +221,13 @@
       color: var(--accent);
     }
 
-    .nav-item span.badge-pill {
+    .badge-pill {
       font-size: 0.68rem;
       padding: 2px 6px;
       border-radius: 999px;
-      background: rgba(77, 224, 255, 0.14);
+      background: rgba(77, 224, 255, 0.18);
       color: var(--accent2);
+      white-space: nowrap;
     }
 
     .main {
@@ -220,22 +240,18 @@
       overflow-y: auto;
     }
 
-    .section {
-      display: none;
-    }
+    .section { display: none; }
+    .section.active { display: block; }
 
-    .section.active {
-      display: block;
-    }
-
-    /* PANELS ------------------------------------------------------- */
+    /* PANELS ------------------------------------------------------ */
     .panel {
       background: var(--bg-panel);
-      border-radius: var(--radius-lg);
+      border-radius: 18px;
       padding: 18px 18px 16px;
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       margin-bottom: 18px;
+      animation: panelIn 0.35s ease-out;
     }
 
     .panel-header {
@@ -247,7 +263,7 @@
     }
 
     .panel-title {
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       font-weight: 600;
     }
 
@@ -267,11 +283,18 @@
     .btn {
       border-radius: var(--radius-pill);
       border: 1px solid var(--border);
-      background: #11172b;
+      background: #10162b;
       color: var(--text-main);
       font-size: 0.75rem;
       padding: 6px 10px;
       cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
     }
 
     .btn-primary {
@@ -288,7 +311,7 @@
 
     .grid-2 {
       display: grid;
-      grid-template-columns: 1.2fr 1.2fr;
+      grid-template-columns: 1.1fr 1.1fr;
       gap: 14px;
     }
 
@@ -302,7 +325,7 @@
       border-radius: var(--radius);
       border: 1px solid var(--border);
       background: #11162a;
-      padding: 10px 11px;
+      padding: 10px;
       font-size: 0.8rem;
     }
 
@@ -321,14 +344,20 @@
       margin-top: 2px;
     }
 
-    .stat-delta.good { color: var(--success); }
-    .stat-delta.bad { color: var(--danger); }
+    .good { color: var(--success); }
+    .bad { color: var(--danger); }
 
-    /* TABLE -------------------------------------------------------- */
+    .note {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* TABLES ------------------------------------------------------ */
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
     }
 
     th, td {
@@ -340,7 +369,7 @@
       background: #181f39;
       color: var(--accent2);
       border-bottom: 1px solid var(--border);
-      font-size: 0.76rem;
+      font-size: 0.74rem;
     }
 
     tr:nth-child(even) td {
@@ -359,42 +388,49 @@
       font-weight: 600;
     }
 
-    .badge.success { background: rgba(70,215,124,0.16); color: var(--success); }
-    .badge.danger { background: rgba(255,73,100,0.16); color: var(--danger); }
-    .badge.warn { background: rgba(255,147,75,0.16); color: var(--warn); }
-    .badge.info { background: rgba(77,224,255,0.16); color: var(--accent2); }
+    .badge.success { background: rgba(70,215,124,0.18); color: var(--success); }
+    .badge.danger  { background: rgba(255,73,100,0.18); color: var(--danger); }
+    .badge.warn    { background: rgba(255,147,75,0.18); color: var(--warn); }
+    .badge.info    { background: rgba(77,224,255,0.18); color: var(--accent2); }
 
-    /* DASHBOARD PERSONA VIEWS -------------------------------------- */
-    .persona-view {
-      display: none;
+    /* PERSONA VIEWS ----------------------------------------------- */
+    .persona-view { display: none; }
+    .persona-view.active { display: block; }
+
+    /* RACK PIPELINE ----------------------------------------------- */
+    .rack-board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 4px;
     }
 
-    .persona-view.active {
-      display: block;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 2px 8px;
-      border-radius: var(--radius-pill);
+    .rack-column {
+      background: var(--bg-panel-soft);
+      border-radius: var(--radius);
       border: 1px solid var(--border);
-      font-size: 0.7rem;
+      padding: 8px;
+      font-size: 0.77rem;
+    }
+
+    .rack-column h4 {
+      margin: 0 0 6px;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
-    .pill-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--accent2);
+    .rack-item {
+      border-radius: 8px;
+      border: 1px solid #262d4a;
+      background: #121a33;
+      padding: 5px 6px;
+      margin-bottom: 4px;
     }
 
-    .pill-dot.red { background: var(--danger); }
-    .pill-dot.green { background: var(--success); }
+    .rack-id { font-weight: 600; font-size: 0.78rem; }
+    .rack-meta { font-size: 0.7rem; color: var(--text-muted); }
 
-    /* SCHEDULING BOARD --------------------------------------------- */
+    /* SCHEDULER --------------------------------------------------- */
     .scheduler-grid {
       display: grid;
       grid-template-columns: 230px 1fr;
@@ -403,7 +439,7 @@
 
     .people-list,
     .job-list {
-      background: var(--bg-panel-light);
+      background: var(--bg-panel-soft);
       border-radius: var(--radius);
       border: 1px solid var(--border);
       padding: 10px;
@@ -412,7 +448,7 @@
     .people-list h4,
     .job-list h4 {
       margin: 3px 0 8px;
-      font-size: 0.86rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
     }
 
@@ -422,7 +458,7 @@
       border: 1px solid var(--border);
       padding: 7px 8px;
       margin-bottom: 6px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       cursor: grab;
     }
 
@@ -435,7 +471,7 @@
     }
 
     .job-title {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
     }
 
@@ -454,9 +490,7 @@
       font-size: 0.72rem;
     }
 
-    .dropzone .draggable {
-      cursor: default;
-    }
+    .dropzone .draggable { cursor: default; }
 
     .schedule-output {
       margin-top: 10px;
@@ -464,11 +498,11 @@
       border-radius: var(--radius);
       border: 1px dashed var(--border);
       padding: 10px;
-      font-size: 0.77rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
     }
 
-    /* FIELD OPS ---------------------------------------------------- */
+    /* FLEX -------------------------------------------------------- */
     .flex-row {
       display: flex;
       flex-wrap: wrap;
@@ -480,13 +514,207 @@
       min-width: 260px;
     }
 
-    .note {
+    /* ANALYTICS --------------------------------------------------- */
+    input[type="number"] {
+      background: #10162a;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 3px 6px;
       font-size: 0.76rem;
-      color: var(--text-muted);
+      width: 80px;
+    }
+
+    .timeline {
+      font-size: 0.76rem;
+      border-left: 1px dashed var(--border);
+      padding-left: 10px;
       margin-top: 6px;
     }
 
-    /* MODALS ------------------------------------------------------- */
+    .timeline-item {
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -11px;
+      top: 4px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent2);
+    }
+
+    /* MINI BARS --------------------------------------------------- */
+    .mini-bar {
+      margin-top: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #050814;
+      overflow: hidden;
+    }
+
+    .mini-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4de0ff, #ffb400);
+      width: 0%;
+      transition: width 0.4s ease-out;
+    }
+
+    /* FORMS / JHA BUILDER ----------------------------------------- */
+    select {
+      background: #10162a;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 4px 8px;
+      font-size: 0.78rem;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.78rem;
+      margin-bottom: 6px;
+    }
+
+    .form-row label {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+    }
+
+    .jha-hazard-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .jha-check {
+      background: #11162a;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .jha-check input {
+      margin: 0;
+    }
+
+    .chip-toggle {
+      background: #11162a;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .chip-toggle input {
+      margin: 0;
+    }
+
+    /* LOTO & FORMS HUB -------------------------------------------- */
+    .loto-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .loto-card {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #11162a;
+      padding: 8px;
+      font-size: 0.78rem;
+    }
+
+    .loto-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .loto-tag {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .loto-lock {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 2px solid #ffb400;
+      position: relative;
+    }
+
+    .loto-lock::before {
+      content: "";
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      top: -8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 2px solid #ffb400;
+      border-bottom-color: transparent;
+    }
+
+    .loto-meta {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .forms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .form-card {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #11162a;
+      padding: 8px;
+      font-size: 0.78rem;
+    }
+
+    .form-card-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .form-card-note {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-card-stat {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    /* MODALS ------------------------------------------------------ */
     .modal {
       position: fixed;
       inset: 0;
@@ -498,11 +726,11 @@
     }
 
     .modal-inner {
-      width: min(640px, 96vw);
-      max-height: 80vh;
+      width: min(620px, 96vw);
+      max-height: 78vh;
       overflow-y: auto;
       background: var(--bg-panel);
-      border-radius: var(--radius-xl);
+      border-radius: 18px;
       border: 1px solid var(--border);
       padding: 16px 18px 14px;
       box-shadow: var(--shadow);
@@ -532,10 +760,6 @@
       cursor: pointer;
     }
 
-    .modal-body p {
-      margin: 4px 0;
-    }
-
     .modal-footer {
       margin-top: 10px;
       display: flex;
@@ -543,90 +767,65 @@
       gap: 8px;
     }
 
-    /* HR/INTEGRATIONS --------------------------------------------- */
-    .timeline {
-      font-size: 0.76rem;
-      border-left: 1px dashed var(--border);
-      padding-left: 10px;
-      margin-top: 6px;
-    }
-
-    .timeline-item {
-      margin-bottom: 6px;
-      position: relative;
-    }
-
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: -11px;
-      top: 4px;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--accent2);
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 7px;
-      border-radius: var(--radius-pill);
+    pre {
+      background: #0c1123;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      font-size: 0.7rem;
-      color: var(--text-muted);
+      padding: 8px 10px;
+      white-space: pre-wrap;
+      font-size: 0.78rem;
     }
 
-    .chip-label {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    /* SCROLLBAR (for nicer desktop look) --------------------------- */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #050814;
-    }
+    /* SCROLLBAR --------------------------------------------------- */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #050814; }
     ::-webkit-scrollbar-thumb {
       background: #2a3150;
       border-radius: 999px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3b4470;
+    ::-webkit-scrollbar-thumb:hover { background: #3b4470; }
+
+    /* KEYFRAMES --------------------------------------------------- */
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 26px rgba(255, 180, 0, 0.9), 0 0 60px rgba(255, 180, 0, 0.45); }
+      50% { box-shadow: 0 0 18px rgba(255, 180, 0, 0.7), 0 0 40px rgba(255, 180, 0, 0.3); }
+    }
+
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE -------------------------------------------------- */
+    @media (max-width: 1060px) {
+      .integration-pill {
+        display: none;
+      }
     }
 
     @media (max-width: 900px) {
-      .sidebar {
-        width: 210px;
-      }
-      .main {
-        left: 210px;
-      }
-      .grid-3 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .scheduler-grid {
-        grid-template-columns: 1fr;
-      }
+      .sidebar { width: 210px; }
+      .main { left: 210px; }
+      .grid-3 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .scheduler-grid { grid-template-columns: 1fr; }
+      .rack-board { grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
 
     @media (max-width: 720px) {
-      .sidebar {
+      .sidebar { display: none; }
+      .main { left: 0; }
+      .panel-header { flex-direction: column; align-items: flex-start; }
+      .grid-2, .grid-3 { grid-template-columns: minmax(0,1fr); }
+      .header-right {
+        gap: 10px;
+      }
+      .nav-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .user-box {
         display: none;
-      }
-      .main {
-        left: 0;
-      }
-      .panel-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .grid-2,
-      .grid-3 {
-        grid-template-columns: minmax(0, 1fr);
       }
     }
   </style>
@@ -637,8 +836,8 @@
     <div class="brand">
       <div class="brand-logo"></div>
       <div>
-        <div class="brand-text-main">48 Electric</div>
-        <div class="brand-text-sub">Enterprise Ops + HR + Field Control</div>
+        <div class="brand-title">48 Electric Control Tower</div>
+        <div class="brand-sub">Data Center & Industrial Ops — One Brain on Top of Teams · Knowify · BambooHR</div>
       </div>
     </div>
     <div class="header-right">
@@ -652,8 +851,14 @@
         <span class="user-dot"></span>
         Alex · CAO
       </div>
+      <button class="btn btn-ghost" onclick="openModal('modal-pitch')">
+        Pitch Script
+      </button>
+      <button class="nav-toggle" onclick="toggleSidebar()">
+        ☰ Menu
+      </button>
       <div class="integration-pill">
-        Integrations: <span>Teams</span> · <span>Knowify</span> · <span>BambooHR</span> · <span>DCIM/BMS</span> (API-ready)
+        Live data from <span>Teams</span>, <span>Knowify</span>, <span>BambooHR</span>, <span>DCIM/BMS</span> (in real build)
       </div>
     </div>
   </header>
@@ -661,193 +866,302 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-section-title">Overview</div>
-    <div class="nav-item active" data-target="sec-dashboard">
-      Exec / PM Overview
-      <span class="badge-pill">Live</span>
+    <div class="nav-item active" data-target="sec-overview">
+      Company Overview
+      <span class="badge-pill">Live demo</span>
     </div>
 
-    <div class="sidebar-section-title">Planning & Field</div>
-    <div class="nav-item" data-target="sec-schedule">Daily Scheduling Board</div>
-    <div class="nav-item" data-target="sec-fieldops">Field Ops: Tools · JHA · Output</div>
+    <div class="sidebar-section-title">Data Center Work</div>
+    <div class="nav-item" data-target="sec-racks">Rack & Change Control</div>
+    <div class="nav-item" data-target="sec-schedule">Smart Scheduling</div>
+    <div class="nav-item" data-target="sec-quality">Quality & Rework Radar</div>
 
-    <div class="sidebar-section-title">People & HR</div>
-    <div class="nav-item" data-target="sec-hrtraining">HR + Apprentices + Training</div>
+    <div class="sidebar-section-title">Field & Safety</div>
+    <div class="nav-item" data-target="sec-field">Field Ops & Tools</div>
+    <div class="nav-item" data-target="sec-jha-builder">JHA / PTP Builder</div>
 
-    <div class="sidebar-section-title">Automation Layer</div>
-    <div class="nav-item" data-target="sec-integrations">Integrations & Automations</div>
+    <div class="sidebar-section-title">Forms & Requests</div>
+    <div class="nav-item" data-target="sec-forms">LOTO & Field Forms Hub</div>
+
+    <div class="sidebar-section-title">People</div>
+    <div class="nav-item" data-target="sec-people">Apprentices & Training</div>
+
+    <div class="sidebar-section-title">Finance & Insights</div>
+    <div class="nav-item" data-target="sec-finance">Margin & Savings Lab</div>
+
+    <div class="sidebar-section-title">Architecture</div>
+    <div class="nav-item" data-target="sec-integrations">Integrations & Roadmap</div>
   </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN -->
   <main class="main">
-    <!-- DASHBOARD SECTION -->
-    <section id="sec-dashboard" class="section active">
+    <!-- OVERVIEW -->
+    <section id="sec-overview" class="section active">
       <div class="panel">
         <div class="panel-header">
           <div>
-            <div class="panel-title">Executive / PM Control Center</div>
+            <div class="panel-title">Company Overview — One Pane per Persona</div>
             <div class="panel-subtitle">
-              One place to see tonight’s change risk, tool accountability, apprentice pipeline,
-              and future automation hooks into Teams, Knowify, and Bamboo.
+              Same data, four views — executives, PMs, HR, and field each see what they need without logging into five systems.
             </div>
           </div>
           <div class="panel-actions">
             <button class="btn btn-primary" onclick="openModal('modal-leadership')">
-              Preview daily leadership email
+              Preview daily leadership summary
             </button>
-            <button class="btn btn-ghost" onclick="openModal('modal-roi')">
-              View time-savings breakdown
+            <button class="btn" onclick="openModal('modal-assumptions')">
+              View savings assumptions
             </button>
           </div>
         </div>
 
-        <!-- Persona-specific dashboards -->
+        <!-- Quick pitch hint -->
+        <div class="stat-card" style="margin-bottom:10px;">
+          <div class="stat-label">One-line pitch</div>
+          <div class="stat-value" style="font-size:0.85rem; margin-top:3px;">
+            “This doesn’t replace Knowify, Bamboo, or Teams — it’s the 48 Electric brain on top that turns all of them into one control tower.”
+          </div>
+        </div>
+
+        <!-- EXEC VIEW -->
         <div class="persona-view persona-exec active">
           <div class="grid-3">
             <div class="stat-card">
-              <div class="stat-label">Hours saved this week (CAO / PM / HR)</div>
-              <div class="stat-value">18.5 hrs</div>
-              <div class="stat-delta good">+ Based on boards, JHAs, and cert reminders automated</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">High-risk changes tonight</div>
+              <div class="stat-label">Racks “Ready to Bill” this week</div>
               <div class="stat-value">
-                2 <span class="badge danger">UPS / STS work</span>
+                <span id="racksReadyCount">0</span>
+                <span class="badge success">pipeline</span>
               </div>
-              <div class="stat-delta">All have JHAs & tool assignments logged</div>
+              <div class="stat-delta good">
+                Value: ~$<span id="racksReadyValue">0</span> in billable work unlocked.
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Tools “missing” > 24 hrs</div>
-              <div class="stat-value">3</div>
-              <div class="stat-delta bad">Currently invisible in other systems</div>
-            </div>
-          </div>
-
-          <div class="grid-2" style="margin-top: 14px;">
-            <div class="stat-card">
-              <div class="stat-label">Next 30 days · training & access risk</div>
+              <div class="stat-label">High-risk change windows tonight</div>
               <div class="stat-value">
-                11 <span class="badge warn">Certs expiring</span>
+                <span id="highRiskCount">0</span>
+                <span class="badge danger">needs eyes</span>
               </div>
-              <p class="note">
-                OSHA / 70E / site access pulled from Bamboo snapshot; this app turns it into a
-                calendar of training events instead of a spreadsheet that gets ignored.
-              </p>
+              <div class="stat-delta">
+                UPS / gen / STS changes in critical halls.
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Apprentice pipeline</div>
+              <div class="stat-label">Estimated monthly time savings</div>
               <div class="stat-value">
-                4 <span class="badge success">ready for promotion</span>
+                <span id="overviewMonthlySavings">0</span> hrs
               </div>
-              <p class="note">
-                Based on real task history (conduit, terminations, prints) instead of memory or “who was on my last job”.
-              </p>
+              <div class="stat-delta good">
+                Equivalent: ~$<span id="overviewMonthlySavingsMoney">0</span>/month in capacity.
+              </div>
             </div>
           </div>
         </div>
 
+        <!-- PM VIEW -->
         <div class="persona-view persona-pm">
           <div class="grid-3">
             <div class="stat-card">
-              <div class="stat-label">Jobs this week missing a committed date</div>
-              <div class="stat-value">7</div>
-              <div class="stat-delta bad">Flagged so PMs aren’t surprised on Friday</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Change orders with hourly risk</div>
+              <div class="stat-label">Jobs trending margin risk</div>
               <div class="stat-value">
-                5 <span class="badge warn">margin at risk</span>
+                3 <span class="badge warn">watch</span>
               </div>
-              <div class="stat-delta">Automation: push updated budgets into Knowify</div>
+              <div class="stat-delta">
+                Based on hours vs plan + recurring blockers.
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Days this week with stacked trades issues</div>
-              <div class="stat-value">3 of 5</div>
-              <div class="stat-delta">Shows up via daily production logs, not guessing</div>
+              <div class="stat-label">Travel-based OT this week (current plan)</div>
+              <div class="stat-value">
+                <span id="pmTravelOt">0.0</span> hrs
+              </div>
+              <div class="stat-delta good">
+                Smart swaps could reduce to ~<span id="pmTravelOtOptimized">0.0</span> hrs.
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Top blocker this week</div>
+              <div class="stat-value" id="pmTopBlocker">—</div>
+              <div class="stat-delta">
+                From daily “goal vs actual” logs — not gut feel.
+              </div>
             </div>
           </div>
-          <p class="note" style="margin-top:10px;">
-            PM pitch: “When I finish my day, I log what actually got done and why. The system
-            rolls that into risk, dates, and suggested change orders instead of me manually updating three places.”
-          </p>
         </div>
 
+        <!-- HR VIEW -->
         <div class="persona-view persona-hr">
           <div class="grid-3">
             <div class="stat-card">
               <div class="stat-label">Certifications expiring ≤ 30 days</div>
               <div class="stat-value">
-                11 <span class="badge.warn badge">needs scheduling</span>
+                11 <span class="badge warn">needs scheduling</span>
               </div>
               <div class="stat-delta">
-                One click → push refresh training invites to Teams.
+                NFPA 70E, site badges, OSHA refresh.
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Apprentices with incomplete safety tasks</div>
-              <div class="stat-value">6</div>
-              <div class="stat-delta bad">
-                Gaps: LOTO practice, energized work observations not logged.
+              <div class="stat-label">Apprentices flagged “promotion-ready”</div>
+              <div class="stat-value">
+                4 <span class="badge success">bench strength</span>
+              </div>
+              <div class="stat-delta">
+                Based on tasks performed, not just memory.
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Open headcount requests (from PMs)</div>
-              <div class="stat-value">3</div>
+              <div class="stat-label">Open headcount requests tied to jobs</div>
+              <div class="stat-value">
+                3 <span class="badge info">mapped</span>
+              </div>
               <div class="stat-delta">
-                Mapped directly to projects and crews, not generic “need more people” emails.
+                Each linked to specific jobs & schedules.
               </div>
             </div>
           </div>
-          <p class="note" style="margin-top:10px;">
-            HR pitch: “I can see who is safe to send where, what training is due, and how that lines up to jobs,
-            without logging into five systems.”
-          </p>
         </div>
 
+        <!-- FIELD VIEW -->
         <div class="persona-view persona-field">
           <div class="grid-3">
             <div class="stat-card">
               <div class="stat-label">Open JHAs needing signatures</div>
-              <div class="stat-value">4</div>
-              <div class="stat-delta">Crew signs on phone; HR sees it automatically.</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Tools flagged “ask at start of shift”</div>
-              <div class="stat-value">
-                3 <span class="badge warn">follow-up</span>
+              <div class="stat-value"><span id="openJhasOverview">4</span></div>
+              <div class="stat-delta">
+                Crews sign on phones; safety sees completion.
               </div>
-              <div class="stat-delta bad">Ladders / testers that disappear in other systems.</div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Average commute for tomorrow’s board</div>
+              <div class="stat-label">Active LOTOs on critical systems</div>
+              <div class="stat-value">
+                <span id="lotoActiveOverview">0</span>
+                <span class="badge info">live</span>
+              </div>
+              <div class="stat-delta">
+                Each tied to JHAs + tasks; no guessing what’s locked and why.
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Avg commute tomorrow</div>
               <div class="stat-value">27 min</div>
               <div class="stat-delta good">
-                App suggests swapping two people to cut OT driving but keep skills aligned.
+                Optimizer suggests swaps to keep drive time sane.
               </div>
             </div>
           </div>
-          <p class="note" style="margin-top:10px;">
-            Field pitch: “I see where I’m going, what tools I’m responsible for, the JHA, and tomorrow’s goal, in one place.
-            I don’t have to chase HR or PMs for basic info.”
-          </p>
+        </div>
+
+        <hr style="border-color:#232842; opacity:0.7; margin:12px 0 10px;" />
+
+        <!-- GLOBAL ANALYTICS STRIP -->
+        <div class="grid-3">
+          <div class="stat-card">
+            <div class="stat-label">Live headcount by site (demo)</div>
+            <div class="stat-value">
+              <span id="totalCrewCount">0</span> crew on 3 DC sites
+            </div>
+            <div class="note" id="headcountBreakdown">
+              OC-2 · CP-1 · GY-1…
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Job health snapshot</div>
+            <div class="stat-value">
+              <span id="jobsGreen">0</span> green ·
+              <span id="jobsYellow">0</span> yellow ·
+              <span id="jobsRed">0</span> red
+            </div>
+            <div class="mini-bar">
+              <div id="jobsGreenBar" class="mini-bar-fill"></div>
+            </div>
+            <div class="note">
+              From margin early-warning + blocker patterns — where to focus tomorrow morning.
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Safety & training</div>
+            <div class="stat-value">
+              <span id="certExpiringOverview">11</span> certs expiring ≤30d
+            </div>
+            <div class="note">
+              Directly fed from JHA builder + cert dashboard. No more chasing spreadsheets across systems.
+            </div>
+          </div>
+        </div>
+
+        <p class="note">
+          Line for your pitch: “This isn’t replacing any system we own. It’s the 48 Electric brain that
+          reads Teams, Knowify, Bamboo, and DCIM – and gives each group exactly what they need.”
+        </p>
+      </div>
+    </section>
+
+    <!-- RACK & CHANGE CONTROL -->
+    <section id="sec-racks" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Rack Energization & Change Window Control</div>
+            <div class="panel-subtitle">
+              From “wired” to “energized and billable” — plus tonight’s UPS/gen/STS risk in one view.
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn btn-primary" onclick="openModal('modal-rack-story')">
+              How this makes money
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Rack pipeline -->
+          <div>
+            <h4>Rack energization pipeline (sample hall)</h4>
+            <div class="rack-board" id="rackBoard"></div>
+            <p class="note">
+              Each card represents a rack/PDU: client, hall, row, and estimated value. “Ready to energize”
+              plus “energized” is potential invoice; the rest is money stuck behind blockers.
+            </p>
+          </div>
+
+          <!-- Change windows -->
+          <div>
+            <h4>Tonight’s change windows — risk engine</h4>
+            <table id="changeTable">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>System</th>
+                  <th>Hall / Site</th>
+                  <th>Risk</th>
+                  <th>Why</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <p class="note">
+              The real app would pull change windows from DCIM/BMS / client portals, apply rules
+              (new crew, critical client, simultaneous work), and tag what needs leadership attention.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- SCHEDULING SECTION -->
+    <!-- SMART SCHEDULING -->
     <section id="sec-schedule" class="section">
       <div class="panel">
         <div class="panel-header">
           <div>
-            <div class="panel-title">Daily Scheduling Board + Auto-Messages</div>
+            <div class="panel-title">Smart Scheduling & Crew / OT Optimizer</div>
             <div class="panel-subtitle">
-              Drag names onto jobs once; the system prepares Teams messages, text summaries,
-              and Knowify job updates automatically.
+              Drag crews onto jobs once. The app creates Teams/SMS text and estimates travel-based OT and savings.
             </div>
           </div>
           <div class="panel-actions">
-            <button class="btn" onclick="openModal('modal-teams')">Preview Teams summary</button>
-            <button class="btn btn-primary" onclick="openModal('modal-schedule-roi')">
-              Show “time saved” story
+            <button class="btn" onclick="openModal('modal-teams')">
+              Preview Teams schedule post
             </button>
           </div>
         </div>
@@ -863,67 +1177,148 @@
             <div class="draggable" draggable="true">Anthony S · Apprentice · swing</div>
           </div>
 
-          <!-- JOBS -->
+          <!-- JOBS + ANALYTICS -->
           <div class="job-list">
-            <h4>Tomorrow’s jobs · Thu (Phoenix)</h4>
+            <h4>Tomorrow’s jobs · Phoenix data center cluster</h4>
 
             <div class="job-panel">
               <div class="job-title">Ocotillo · UPS-B bypass + battery test</div>
               <div class="job-meta">CHG-3217 · 20:00–23:30 · HALL 3 · CloudCore (Gold)</div>
-              <div class="dropzone" data-job="ocotillo">
-                Drop crew here…
-              </div>
+              <div class="dropzone" data-job="ocotillo">Drop crew here…</div>
             </div>
 
             <div class="job-panel">
               <div class="job-title">Mesa CloudPark · PDU-3 IR scan & torque</div>
               <div class="job-meta">CHG-3224 · 07:00–13:00 · HALL 1/2 · NetSphere</div>
-              <div class="dropzone" data-job="cloudpark">
-                Drop crew here…
-              </div>
+              <div class="dropzone" data-job="cloudpark">Drop crew here…</div>
             </div>
 
             <div class="job-panel">
               <div class="job-title">Goodyear Edge · Gen-3 load bank test</div>
-              <div class="job-meta">CHG-3230 · 18:30–21:00 · yard · CloudCore</div>
-              <div class="dropzone" data-job="goodyear">
-                Drop crew here…
-              </div>
+              <div class="job-meta">CHG-3230 · 18:30–21:00 · gen yard · CloudCore</div>
+              <div class="dropzone" data-job="goodyear">Drop crew here…</div>
             </div>
 
             <div class="schedule-output" id="scheduleOutput">
-              <strong>Auto-generated: Schedule messages & Teams summary</strong><br />
-              Drag a few names onto jobs and this area updates to show the exact text that would go
-              to Teams or SMS. In the real app, this would be one click to send instead of 20 minutes
-              of manual formatting.
+              <strong>Auto-generated: schedule text</strong><br />
+              Drag a few names onto jobs and this updates with exactly what would go to Teams/SMS.
+            </div>
+
+            <div class="grid-2" style="margin-top:10px;">
+              <div class="stat-card">
+                <div class="stat-label">Travel-based OT forecast (current board)</div>
+                <div class="stat-value">
+                  <span id="travelOtCurrent">0.0</span> hrs/week
+                </div>
+                <div class="stat-delta">
+                  Smart crew swaps: ~<span id="travelOtOptimized">0.0</span> hrs/week
+                  (<span id="travelOtSavingsHours">0.0</span> hrs/week saved)
+                </div>
+                <p class="note">
+                  Blended loaded rate:
+                  $<input type="number" id="travelHourlyRate" value="55" min="20" max="150" />/hr
+                  → estimated monthly savings:
+                  <strong>$<span id="travelOtSavingsMoney">0</span>/month</strong>.
+                </p>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Why this matters</div>
+                <p class="note">
+                  Line to say: “Right now, we don’t see the cost of sending the wrong crew to the wrong site.
+                  This makes travel/OT a number we can actually manage and reduce.”
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FIELD OPS SECTION -->
-    <section id="sec-fieldops" class="section">
+    <!-- QUALITY & REWORK RADAR -->
+    <section id="sec-quality" class="section">
       <div class="panel">
         <div class="panel-header">
           <div>
-            <div class="panel-title">Field Ops · Tools · JHA · Daily Output</div>
+            <div class="panel-title">Quality & Rework Radar</div>
             <div class="panel-subtitle">
-              This is where foremen actually live: tools, JHAs, and daily production — tied back
-              to HR and PM dashboards automatically.
+              Failed inspections, punchlist rework, and “do it twice” hours — turned into real dollars.
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Rework table -->
+          <div>
+            <h4>Recent rework / failed inspections (sample)</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Job</th>
+                  <th>Issue</th>
+                  <th>Hours</th>
+                  <th>Est. Cost</th>
+                  <th>Root cause</th>
+                </tr>
+              </thead>
+              <tbody id="reworkTableBody"></tbody>
+            </table>
+            <p class="note">
+              Each row would really come from Knowify / QC reports / PM notes. The demo just uses fake data
+              to show the idea.
+            </p>
+          </div>
+
+          <!-- Summary -->
+          <div>
+            <h4>Rework cost this quarter (demo)</h4>
+            <div class="stat-card">
+              <div class="stat-label">Rework hours this quarter</div>
+              <div class="stat-value">
+                <span id="reworkHoursQuarter">0</span> hrs
+              </div>
+              <div class="stat-delta bad">
+                Direct labor cost: ~$<span id="reworkCostQuarter">0</span> this quarter.
+              </div>
+              <p class="note">
+                If we cut this by just 30%, that’s roughly:
+                <strong>$<span id="reworkSavingsAnnual">0</span>/year</strong> back into margin.
+              </p>
+            </div>
+
+            <div class="stat-card" style="margin-top:10px;">
+              <div class="stat-label">Top root causes this quarter</div>
+              <ul style="margin:6px 0 0 18px; font-size:0.76rem; color:var(--text-muted);" id="reworkCausesList"></ul>
+              <p class="note">
+                This is where you attack with standards, training, and pre-task planning — and where this app
+                helps you prove it worked.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIELD OPS & TOOLS -->
+    <section id="sec-field" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Field Ops & High-Value Tools</div>
+            <div class="panel-subtitle">
+              For foremen: where am I going, what am I doing, where are my tools — all tied back to ops.
             </div>
           </div>
           <div class="panel-actions">
             <button class="btn" onclick="openModal('modal-field-story')">
-              How this replaces 3 existing tools
+              Explain field value (script)
             </button>
           </div>
         </div>
 
         <div class="flex-row">
-          <!-- EQUIPMENT -->
+          <!-- TOOLS -->
           <div class="flex-col">
-            <h4>Tool & Equipment Tracker</h4>
+            <h4>High-value tool & equipment tracker</h4>
             <table>
               <thead>
                 <tr>
@@ -950,7 +1345,7 @@
                   <td>10' fiberglass ladder L-12</td>
                   <td>Last: OC-2</td>
                   <td>—</td>
-                  <td><span class="badge warn">Ask crew at start</span></td>
+                  <td><span class="badge warn">Ask at start</span></td>
                 </tr>
                 <tr>
                   <td>Megger tester M-03</td>
@@ -960,43 +1355,19 @@
                 </tr>
               </tbody>
             </table>
-            <p class="note">
-              Tools move OC-2 → CP-1 → yard. In this app that movement is tapped once on a phone
-              and becomes history HR and PM can actually use.
-            </p>
+            <p class="note" id="toolLossNote">Estimating loss from these patterns…</p>
           </div>
 
-          <!-- JHA -->
+          <!-- GOALS / BLOCKERS -->
           <div class="flex-col">
-            <h4>Smart JHA · Ocotillo UPS-B</h4>
-            <div class="chip-label">Hazards selected</div>
-            <div style="margin:4px 0 6px;">
-              <span class="chip"><span class="pill-dot.red pill-dot"></span> Energized gear nearby</span>
-              <span class="chip"><span class="pill-dot.red pill-dot"></span> Battery strings / DC energy</span>
-              <span class="chip"><span class="pill-dot.red pill-dot"></span> Trip hazards in cold aisle</span>
-            </div>
-
-            <div class="chip-label">Controls selected</div>
-            <div style="margin:4px 0 6px;">
-              <span class="chip"><span class="pill-dot pill-dot"></span> Test-before-touch</span>
-              <span class="chip"><span class="pill-dot pill-dot"></span> LO/TO with site tech sign-off</span>
-              <span class="chip"><span class="pill-dot pill-dot"></span> Barricades at aisle ends</span>
-              <span class="chip"><span class="pill-dot pill-dot"></span> Radio callouts per step</span>
-            </div>
-
-            <p class="note">
-              Foreman taps hazards + controls, crew signs on the phone. HR gets a JHA record,
-              safety sees trends, PMs see which tasks are consistently risky.
-            </p>
-
-            <h4 style="margin-top:14px;">Daily Goals & Production</h4>
-            <table>
+            <h4>Daily goals & production</h4>
+            <table id="productionTable">
               <thead>
                 <tr>
                   <th>Crew</th>
                   <th>Goal</th>
                   <th>Actual</th>
-                  <th>Blockers</th>
+                  <th>Blocker</th>
                 </tr>
               </thead>
               <tbody>
@@ -1018,42 +1389,258 @@
                   <td>75%</td>
                   <td>Stacked trades</td>
                 </tr>
+                <tr>
+                  <td>Crew D</td>
+                  <td>Label panels HALL 2</td>
+                  <td>50%</td>
+                  <td>Material delay (labels)</td>
+                </tr>
               </tbody>
             </table>
-            <p class="note">
-              These “blockers” roll up to PM / Exec to show where margin disappears: materials,
-              stacked trades, access. No one has to build that report by hand.
-            </p>
+            <p class="note" id="blockerSummary">Top recurring blockers this week…</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- HR / TRAINING SECTION -->
-    <section id="sec-hrtraining" class="section">
+    <!-- JHA / PTP BUILDER -->
+    <section id="sec-jha-builder" class="section">
       <div class="panel">
         <div class="panel-header">
           <div>
-            <div class="panel-title">HR + Apprentices + Training (Field-aware)</div>
+            <div class="panel-title">Smart JHA / PTP Builder</div>
             <div class="panel-subtitle">
-              HR view that actually knows what people do in the field: skills, safety tasks,
-              certs, training, and who is ready for more responsibility.
+              Pick job site + task → auto hazards, controls, and risk level. Crews sign on phones; safety gets clean records.
             </div>
           </div>
           <div class="panel-actions">
-            <button class="btn" onclick="openModal('modal-hr-bamboo')">
-              Show Bamboo → 48 Electric import
-            </button>
-            <button class="btn btn-primary" onclick="openModal('modal-training-teams')">
-              Preview training reminders to Teams
+            <button class="btn btn-primary" onclick="generateJha()">
+              Regenerate JHA from selections
             </button>
           </div>
         </div>
 
         <div class="grid-2">
-          <!-- Apprentice matrix -->
+          <!-- CONTROLS -->
           <div>
-            <h4>Apprentice skill tracker</h4>
+            <h4>1. Job context & hazards</h4>
+            <div class="form-row">
+              <label for="jhaSiteSelect">Job site:</label>
+              <select id="jhaSiteSelect">
+                <option>Ocotillo — HALL 3 (CloudCore Gold)</option>
+                <option>Mesa CloudPark — HALL 1/2 (NetSphere)</option>
+                <option>Goodyear Edge — Gen yard (CloudCore)</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="jhaTaskSelect">Task:</label>
+              <select id="jhaTaskSelect">
+                <option>UPS bypass & battery test</option>
+                <option>Rack energization in DC hall</option>
+                <option>PDU IR scan & torque</option>
+                <option>Feeder pull in data hall</option>
+                <option>Panel terminations / lugs</option>
+                <option>Gen load bank test</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <span>Risk factors:</span>
+              <label class="chip-toggle">
+                <input type="checkbox" id="jhaNightWork" checked />
+                Night work / reduced staffing
+              </label>
+              <label class="chip-toggle">
+                <input type="checkbox" id="jhaNewApprentice" />
+                New apprentice on crew
+              </label>
+              <label class="chip-toggle">
+                <input type="checkbox" id="jhaClientCritical" checked />
+                Critical client / hall
+              </label>
+            </div>
+
+            <h4 style="margin-top:10px;">2. Hazards for this task</h4>
+            <p class="note">
+              These are auto-selected based on task + site, but can be toggled on/off.
+            </p>
+            <div id="jhaHazardsContainer" class="jha-hazard-list">
+              <!-- Filled by JS -->
+            </div>
+          </div>
+
+          <!-- PREVIEW -->
+          <div>
+            <h4>3. Generated JHA / PTP preview (demo)</h4>
+            <p class="note">
+              In a real build, this text becomes a PDF or Teams link crews can sign on their phones. Safety can search by job, date, hazard, or lead.
+            </p>
+            <pre id="jhaPreview">
+Choose a job site and task on the left to generate a JHA/PTP…
+            </pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMS & LOTO HUB -->
+    <section id="sec-forms" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">LOTO & Field Forms Hub</div>
+            <div class="panel-subtitle">
+              All the 48 Electric app forms in one place — now tied to jobs, JHAs, and analytics.
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- LOTO -->
+          <div>
+            <h4>LOTO (Lockout/Tagout) tracker</h4>
+            <div class="loto-board" id="lotoBoard"></div>
+            <p class="note" id="lotoSummary">
+              Visual LOTO board — who has what locked, where, and when it should clear.
+            </p>
+
+            <h4 style="margin-top:10px;">Quick LOTO form (demo)</h4>
+            <div class="stat-card">
+              <div class="form-row">
+                <label>Equipment:</label>
+                <input type="text" style="flex:1; min-width:120px; background:#10162a; border:1px solid var(--border); border-radius:8px; color:var(--text-main); padding:4px 6px; font-size:0.76rem;" placeholder="UPS-B output breaker, Gen-3 main, etc." />
+              </div>
+              <div class="form-row">
+                <label>Site / hall:</label>
+                <select style="flex:1; min-width:140px;">
+                  <option>OC-2 · HALL 3 (CloudCore)</option>
+                  <option>CP-1 · HALL 1/2 (NetSphere)</option>
+                  <option>GY-1 · Gen yard (CloudCore)</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>Responsible person:</label>
+                <input type="text" style="flex:1; min-width:120px; background:#10162a; border:1px solid var(--border); border-radius:8px; color:var(--text-main); padding:4px 6px; font-size:0.76rem;" placeholder="Foreman name" />
+              </div>
+              <div class="form-row">
+                <label>Expected clear:</label>
+                <input type="text" style="width:110px; background:#10162a; border:1px solid var(--border); border-radius:8px; color:var(--text-main); padding:4px 6px; font-size:0.76rem;" placeholder="23:15" />
+              </div>
+              <button class="btn btn-primary" style="margin-top:6px;" onclick="openModal('modal-loto-form')">
+                Open full LOTO form (demo)
+              </button>
+              <p class="note">
+                In the real app this would be the same LOTO form 48 uses today — just aware of jobs, JHAs, and tools.
+              </p>
+            </div>
+          </div>
+
+          <!-- OTHER FORMS -->
+          <div>
+            <h4>Field & admin forms — 48 Electric spin</h4>
+            <div class="forms-grid">
+              <div class="form-card">
+                <div class="form-card-title">Submit fuel receipt</div>
+                <div class="form-card-note">
+                  Snap a photo, select job, truck, and site. Auto-allocates cost to the right project.
+                </div>
+                <div class="form-card-stat">
+                  This week: 6 submissions · 100% matched to jobs.
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-fuel')">Open fuel receipt form</button>
+              </div>
+
+              <div class="form-card">
+                <div class="form-card-title">Submit credit card receipt</div>
+                <div class="form-card-note">
+                  Replace shoeboxes and email chains. Approvals tied to PM & job budgets.
+                </div>
+                <div class="form-card-stat">
+                  Avg approval time: 3.2 hrs.
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-cc')">Open CC receipt form</button>
+              </div>
+
+              <div class="form-card">
+                <div class="form-card-title">Request PO</div>
+                <div class="form-card-note">
+                  Request material or services by job/phase. Feeds Knowify so PMs see it instantly.
+                </div>
+                <div class="form-card-stat">
+                  4 POs waiting approval · 12 issued this week.
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-po')">Open PO request</button>
+              </div>
+
+              <div class="form-card">
+                <div class="form-card-title">Time & Material project form</div>
+                <div class="form-card-note">
+                  Capture T&M work with client, job, and approvals — no more retyping from notebooks.
+                </div>
+                <div class="form-card-stat">
+                  2 active T&M tickets at OC-2.
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-tm')">Open T&M form</button>
+              </div>
+
+              <div class="form-card">
+                <div class="form-card-title">Timecard adjustment</div>
+                <div class="form-card-note">
+                  Fix missed punches or wrong jobs. Approvals logged for payroll audit.
+                </div>
+                <div class="form-card-stat">
+                  3 adjustments pending supervisor sign-off.
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-timecard')">Open timecard adjustment</button>
+              </div>
+
+              <div class="form-card">
+                <div class="form-card-title">Material request</div>
+                <div class="form-card-note">
+                  Foremen request material directly from the field; status visible to PMs and warehouse.
+                </div>
+                <div class="form-card-stat">
+                  5 requests in queue · 2 ready for pickup.
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-material')">Open material request</button>
+              </div>
+
+              <div class="form-card">
+                <div class="form-card-title">Tool checkout form</div>
+                <div class="form-card-note">
+                  Checkout and return tools. Tied straight into the tool tracker & shrink analytics.
+                </div>
+                <div class="form-card-stat">
+                  17 active checkouts · 1 overdue (Megger M-03).
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-toolcheckout')">Open tool checkout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PEOPLE & TRAINING -->
+    <section id="sec-people" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Apprentices, Skills & Training (Field-aware HR)</div>
+            <div class="panel-subtitle">
+              Promotion and training decisions based on real tasks done on real jobs — not just memory.
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn" onclick="openModal('modal-hr-bamboo')">
+              How this layers on BambooHR
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <h4>48 Electric skills matrix (sample)</h4>
             <table>
               <thead>
                 <tr>
@@ -1061,7 +1648,7 @@
                   <th>Prints</th>
                   <th>Conduit</th>
                   <th>Terminations</th>
-                  <th>Field notes</th>
+                  <th>Notes</th>
                 </tr>
               </thead>
               <tbody>
@@ -1070,33 +1657,31 @@
                   <td><span class="badge success">Independent</span></td>
                   <td><span class="badge warn">Assisted</span></td>
                   <td><span class="badge warn">Assisted</span></td>
-                  <td>Great with layout; needs more lug reps.</td>
+                  <td>Great layout; needs more lug reps.</td>
                 </tr>
                 <tr>
                   <td>Anthony S (A1)</td>
                   <td><span class="badge warn">Assisted</span></td>
                   <td><span class="badge success">Independent</span></td>
                   <td><span class="badge warn">Assisted</span></td>
-                  <td>Fast; needs practice on prints + safety briefings.</td>
+                  <td>Fast worker; still building confidence with prints.</td>
                 </tr>
                 <tr>
                   <td>Nguyen (A1)</td>
                   <td><span class="badge warn">Assisted</span></td>
-                  <td><span class="badge.warn badge">Observed</span></td>
-                  <td><span class="badge.danger badge">Needs supervision</span></td>
-                  <td>Strong on labeling standards; early with LOTO.</td>
+                  <td><span class="badge warn">Observed</span></td>
+                  <td><span class="badge danger">Needs supervision</span></td>
+                  <td>Strong labeling; needs LOTO practice.</td>
                 </tr>
               </tbody>
             </table>
             <p class="note">
-              Instead of “who feels ready?”, HR and PMs can see what tasks apprentices have actually
-              done and at what level.
+              PMs and HR can filter “ready for more responsibility in NetSphere halls” using skills + badges + site history.
             </p>
           </div>
 
-          <!-- Certs + training -->
           <div>
-            <h4>Training & certification expiry</h4>
+            <h4>Training & cert expiry (snapshot)</h4>
             <table>
               <thead>
                 <tr>
@@ -1111,11 +1696,11 @@
                   <td>Diaz</td>
                   <td>NFPA 70E</td>
                   <td>2025-01-22</td>
-                  <td><span class="badge danger">Urgent (30d)</span></td>
+                  <td><span class="badge danger">Urgent</span></td>
                 </tr>
                 <tr>
                   <td>Ramirez</td>
-                  <td>NetSphere site badge</td>
+                  <td>NetSphere DC badge</td>
                   <td>2025-02-14</td>
                   <td><span class="badge warn">Soon</span></td>
                 </tr>
@@ -1127,89 +1712,180 @@
                 </tr>
               </tbody>
             </table>
-
             <div class="timeline">
               <div class="timeline-item">
-                <strong>Tomorrow 09:00</strong> — Draft training invites for Diaz & Ramirez
-                (Teams calendar, prefilled with site they support).
+                <strong>Tomorrow 09:00</strong> — propose NFPA 70E refresher slot for Diaz (Teams invite).
               </div>
               <div class="timeline-item">
-                <strong>Next week</strong> — HR sees “training impact” on job coverage (which crews are affected).
+                <strong>Next week</strong> — schedule badge refresher for Ramirez in a lighter work window.
               </div>
             </div>
-
-            <h4 style="margin-top:12px;">Field “Task Cards” · 48 playbook</h4>
             <p class="note">
-              These are accessible from phones, right where the JHAs and jobs are:
+              In the real system, this comes from BambooHR exports + site calendars. HR has one place
+              to see who is safe, certified, and field-proven.
             </p>
-            <ul style="font-size:0.78rem; color:var(--text-muted); padding-left:18px; margin-top:4px;">
-              <li>Data hall receptacle rough-in (“the 48 way”).</li>
-              <li>Setting / leveling cable tray with torque specs.</li>
-              <li>Panel labeling standards matching prints and client expectations.</li>
-            </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- INTEGRATIONS / AUTOMATIONS SECTION -->
+    <!-- FINANCE & SAVINGS -->
+    <section id="sec-finance" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Margin & Savings Lab</div>
+            <div class="panel-subtitle">
+              Where the “this saves bookoo bucks” story lives — tool shrink, OT, blockers, and what-if ROI.
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="stat-card">
+            <div class="stat-label">Tool loss & shrink (demo)</div>
+            <div class="stat-value">
+              This quarter: ~$<span id="toolLossCurrent">0</span>
+            </div>
+            <div class="stat-delta bad">
+              Annualized: ~$<span id="toolLossAnnual">0</span> if we change nothing.
+            </div>
+            <p class="note">
+              Based on a couple of “ask at start of shift” and “missing” high-value tools. Real data
+              would include load banks, meggers, thermal cameras, specialty testers.
+            </p>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Top recurring blockers from field logs</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Blocker</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody id="blockerTableBody"></tbody>
+            </table>
+            <p class="note">
+              Each can be translated into hours lost and margin impact. This is the list you attack first.
+            </p>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">What-if ROI — slider for leadership</div>
+            <p class="note">
+              Blended loaded hourly rate:
+              $<input type="number" id="whatIfRate" value="55" min="20" max="150" />/hr
+            </p>
+            <p class="note">
+              Hours we realistically save per week across admin, PMs, HR & field:
+              <input type="number" id="whatIfHours" value="10" min="1" max="40" /> hrs/week
+            </p>
+            <p class="note">
+              Monthly savings:
+              <strong>$<span id="whatIfMonthly">0</span>/month</strong><br/>
+              Annual savings:
+              <strong>$<span id="whatIfAnnual">0</span>/year</strong>
+            </p>
+            <p class="note">
+              Line to say: “Even if we’re off by half, it still makes sense to fund this and put me on it.”
+            </p>
+          </div>
+        </div>
+
+        <h4 style="margin-top:18px;">Opportunity scorecard — where this pays for itself</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Assumption</th>
+              <th>Potential annual savings</th>
+            </tr>
+          </thead>
+          <tbody id="opportunityTableBody"></tbody>
+        </table>
+        <p class="note" id="opportunityNote">
+          Numbers update based on the sliders and analytics above (demo assumptions).
+        </p>
+
+        <h4 style="margin-top:18px;">Shift replay (sample Ocotillo night)</h4>
+        <div class="timeline">
+          <div class="timeline-item">
+            <strong>19:45</strong> — Crew A checks in at Ocotillo; JHA signed by 4 crew.
+          </div>
+          <div class="timeline-item">
+            <strong>20:10</strong> — LO/TO verified, UPS-B bypass started; tools accounted.
+          </div>
+          <div class="timeline-item">
+            <strong>22:05</strong> — Battery testing complete; minor delay logged (stacked trades).
+          </div>
+          <div class="timeline-item">
+            <strong>23:15</strong> — Work complete; production log posted; tomorrow’s plan auto-updated.
+          </div>
+        </div>
+        <p class="note">
+          In a real build, this “replay” is assembled from JHAs, tools, LOTOs, and production logs so you never
+          have to reconstruct a night from memory when a client asks.
+        </p>
+      </div>
+    </section>
+
+    <!-- INTEGRATIONS & ROADMAP -->
     <section id="sec-integrations" class="section">
       <div class="panel">
         <div class="panel-header">
           <div>
-            <div class="panel-title">Integration & Automation Blueprint</div>
+            <div class="panel-title">Integrations & Roadmap</div>
             <div class="panel-subtitle">
-              How this app saves the CAO, PMs, and CEO real time by sitting on top of Teams,
-              Knowify, BambooHR, and DCIM/BMS — instead of being “just another place to click”.
+              Not another silo — a 48 Electric-specific brain on top of the tools we already pay for.
             </div>
           </div>
           <div class="panel-actions">
-            <button class="btn" onclick="openModal('modal-api-story')">Explain API story (pitch)</button>
+            <button class="btn" onclick="openModal('modal-roadmap')">
+              Show Phase 1 → Phase 2 plan
+            </button>
           </div>
         </div>
 
         <div class="grid-2">
           <div>
-            <h4>System integrations (fake data, real flows)</h4>
+            <h4>Systems this app would connect to</h4>
             <table>
               <thead>
                 <tr>
                   <th>System</th>
                   <th>Data used</th>
-                  <th>Time saved / week</th>
+                  <th>Value to 48 Electric</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Microsoft Teams</td>
-                  <td>Daily schedule, JHA links, training invites</td>
-                  <td>4–6 hrs (CAO + dispatch)</td>
+                  <td>Teams</td>
+                  <td>Schedule posts, JHA & LOTO links, training invites</td>
+                  <td>Reduces manual messaging from CAO/dispatch/PMs</td>
                 </tr>
                 <tr>
                   <td>Knowify</td>
                   <td>Job numbers, budgets, change orders</td>
-                  <td>3–5 hrs (PM manual updates)</td>
+                  <td>Feeds margin & progress views; fewer surprises</td>
                 </tr>
                 <tr>
                   <td>BambooHR</td>
-                  <td>Employees, certs, role / site access</td>
-                  <td>2–3 hrs (HR hunting in spreadsheets)</td>
+                  <td>Employees, certs, roles, site access</td>
+                  <td>Matches people to jobs they’re certified & ready for</td>
                 </tr>
                 <tr>
-                  <td>DCIM / BMS</td>
-                  <td>Change windows, alarms, hall status</td>
-                  <td>2–4 hrs (reducing call-and-confirm time)</td>
+                  <td>DCIM/BMS</td>
+                  <td>Change windows, alarms, criticality</td>
+                  <td>Aligns risky work with safe windows & redundancy</td>
                 </tr>
               </tbody>
             </table>
-            <p class="note">
-              The value: 48 Electric keeps ownership of its own data and workflows, and this
-              layer makes the external tools feel like one system instead of four.
-            </p>
           </div>
 
           <div>
-            <h4>Tonight’s automation queue (simulated)</h4>
+            <h4>Examples of automations (demo)</h4>
             <table>
               <thead>
                 <tr>
@@ -1228,27 +1904,27 @@
                 </tr>
                 <tr>
                   <td>17:10</td>
-                  <td>Update Knowify job budgets with OT forecast</td>
-                  <td>Knowify</td>
+                  <td>Update Knowify jobs with OT & T&M forecast</td>
+                  <td>Knowify API</td>
                   <td><span class="badge info">Simulated</span></td>
                 </tr>
                 <tr>
                   <td>17:15</td>
-                  <td>Post JHA summary and sign-off stats</td>
-                  <td>Teams · Safety channel</td>
+                  <td>Post JHA & LOTO completion summary</td>
+                  <td>Teams safety channel</td>
                   <td><span class="badge info">Simulated</span></td>
                 </tr>
                 <tr>
                   <td>17:20</td>
-                  <td>Email leadership summary (Exec / PM / HR views)</td>
+                  <td>Email Exec/PM/HR daily snapshot</td>
                   <td>Email</td>
                   <td><span class="badge success">Ready</span></td>
                 </tr>
               </tbody>
             </table>
             <p class="note">
-              You can tell the CAO: “Every one of these used to be a person’s job at the end
-              of the day. This is how I give those hours back to you.”
+              Each row is currently a manual task for someone. Your pitch is:
+              “Let me own this layer so these become buttons, not chores.”
             </p>
           </div>
         </div>
@@ -1257,42 +1933,165 @@
   </main>
 
   <!-- MODALS -->
+
+  <!-- PITCH SCRIPT MODAL -->
+  <div id="modal-pitch" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Pitch Script — read this to Alex</div>
+        <button class="modal-close" onclick="closeModal('modal-pitch')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+“Alex, right now our work lives in a bunch of different systems — Knowify, BambooHR, Teams, the DCIM tools —
+and everybody is doing mental gymnastics to connect them.
+
+This Control Tower is a 48 Electric–specific brain that sits on top of all of that:
+
+• For you and the exec team, it answers:
+  ‘How many racks can we bill, where is tonight’s risk, and what’s our weekly savings story?’
+
+• For PMs, it turns margin, OT, and blockers into live numbers instead of chasing spreadsheets and texts.
+
+• For HR, it shows who is safe, certified, and field-proven enough to send to each data hall.
+
+• For the field, it gives foremen a single page: where they’re going, what they’re doing,
+  which tools they own, and one-tap forms for JHAs, LOTOs, fuel, receipts, and timecards.
+
+The numbers here are demo assumptions, but even with conservative savings — around
+[$whatIfAnnual] a year — it easily justifies putting me in an internal role to own this,
+wire it into our real data, and keep tuning it around how we actually build work.
+
+What I’m asking for is:
+1) The green light to pilot this as an internal app for the Phoenix DC cluster, and
+2) A path to move more of my time into building and owning this Control Tower instead
+   of us trying to manage all of this manually in five separate tools.”
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-pitch')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-leadership" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Daily leadership summary (sample)</div>
+        <button class="modal-close" onclick="closeModal('modal-leadership')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+Subject: 48 Electric — Phoenix DC overview (tonight)
+
+Exec snapshot:
+• Racks ready to bill this week: [racksReadyCount] (~$[racksReadyValue] potential revenue)
+• High-risk change windows tonight: [highRiskCount] (UPS / gen / STS, CloudCore Gold / NetSphere)
+• Estimated monthly capacity unlocked by this system: [overviewMonthlySavings] hrs (~$[overviewMonthlySavingsMoney])
+
+Field snapshot:
+• Smart scheduling suggests reducing travel-based OT from [travelOtCurrent] → [travelOtOptimized] hrs/week.
+• Tools in question: ladder L-12, Megger M-03 — estimated ~$[toolLossAnnual] annual shrink if pattern continues.
+• Active LOTOs right now: [lotoActiveOverview].
+• Top blocker in daily logs this week: [pmTopBlocker].
+
+HR & apprentices:
+• 11 certs expiring ≤ 30 days (NFPA 70E, NetSphere badges, OSHA refresh).
+• 4 apprentices flagged as promotion-ready based on tasks completed.
+
+— Generated automatically by the 48 Electric Control Tower on top of Teams / Knowify / BambooHR / DCIM.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-leadership')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-assumptions" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Savings assumptions (what this demo is assuming)</div>
+        <button class="modal-close" onclick="closeModal('modal-assumptions')">✕</button>
+      </div>
+      <div class="modal-body">
+        <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
+          <li>Scheduling + messaging automation saves ~6–8 hrs/week (CAO / dispatch / PMs).</li>
+          <li>HR cert tracking + training invites saves ~2–3 hrs/week.</li>
+          <li>Margin / blocker reporting saves ~2–3 hrs/week for PMs.</li>
+          <li>Better crew/site matching + travel awareness trims a few hours of OT/month.</li>
+          <li>LOTO & form automation (fuel, PO, receipts) saves admin time and reduces errors.</li>
+        </ul>
+        <p>
+          With a blended loaded rate around $55/hr, even a conservative 10 hrs/week comes out to well over
+          $25k/year. The real system could capture more once it’s wired into live data.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-assumptions')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-rack-story" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Rack pipeline story (how this makes money)</div>
+        <button class="modal-close" onclick="closeModal('modal-rack-story')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Right now, “how many racks can we bill?” lives in people’s heads, spreadsheets, and emails.
+        </p>
+        <p>
+          This board:
+        </p>
+        <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
+          <li>Shows how many racks/PDU positions are wired, QC’d, ready to energize, and energized.</li>
+          <li>Attaches JHAs, IR scans, LOTO records, and sign-offs so billing isn’t waiting on paperwork.</li>
+          <li>Makes blockers visible (missing labels, stacked trades, access issues).</li>
+        </ul>
+        <p>
+          If we can pull just 5–10 racks per week forward into “ready to bill”, that’s tens of thousands
+          of dollars in earlier revenue recognition — and less risk of end-of-project surprises.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-rack-story')">Close</button>
+      </div>
+    </div>
+  </div>
+
   <div id="modal-teams" class="modal">
     <div class="modal-inner">
       <div class="modal-header">
-        <div>
-          <div class="modal-title">Preview — Teams summary message</div>
-          <div class="panel-subtitle">
-            This is what would be pushed to Teams automatically after you drag crews onto the board.
-          </div>
-        </div>
+        <div class="modal-title">Sample Teams schedule post</div>
         <button class="modal-close" onclick="closeModal('modal-teams')">✕</button>
       </div>
       <div class="modal-body">
-        <p><strong>Channel:</strong> 48 Electric · Phoenix · Night Ops</p>
-        <p><strong>Message:</strong></p>
-        <pre style="background:#0c1123; padding:8px 10px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; font-size:0.78rem;">
-Tonight's plan — Ocotillo / CloudPark / Goodyear
+        <pre>
+Channel: 48 Electric · Phoenix · Night Ops
 
-Crew A — Lead: Diaz
-• 06:00 – Ocotillo OC-2 — HALL 3 UPS-B prep & walkdown
-• 20:00 – Ocotillo — UPS-B bypass & battery test (CHG-3217)
-Tools: IR #4, ladder L-12, bypass lock set
+Ocotillo — UPS-B bypass & battery test (CHG-3217)
+• Crew: [crew-ocotillo]
+• Time: 20:00–23:30 · HALL 3 · CloudCore
+• JHA: link
+• LOTO: UPS-B output breaker (active)
+• Tools: IR #4, ladder L-12, DC PPE kit
 
-Crew B — Lead: Ramirez
-• 07:00 – Mesa CloudPark CP-1 — PDU-3 IR scan & torque (CHG-3224)
-Tools: IR #2, torque kit
+Mesa CloudPark — PDU-3 IR scan & torque (CHG-3224)
+• Crew: [crew-cloudpark]
+• Time: 07:00–13:00 · HALL 1/2 · NetSphere
+• JHA: link
 
-Crew C — Lead: Lewis
-• 18:30 – Goodyear GY-1 — Gen-3 load bank test (CHG-3230)
-Tools: load bank #2
+Goodyear Edge — Gen-3 load bank test (CHG-3230)
+• Crew: [crew-goodyear]
+• Time: 18:30–21:00 · gen yard · CloudCore
+• LOTO: Gen-3 main (if required)
+• Tools: load bank #2
 
-JHAs & MOPs are attached to each job card in the app (same system).
+Generated automatically by the 48 Electric scheduling board.
         </pre>
-        <p class="note">
-          Demo line: “Scheduling happens once here, and this is auto-posted. No copy-paste into
-          Teams, no last-minute scrambling.”
-        </p>
       </div>
       <div class="modal-footer">
         <button class="btn" onclick="closeModal('modal-teams')">Close</button>
@@ -1300,51 +2099,26 @@ JHAs & MOPs are attached to each job card in the app (same system).
     </div>
   </div>
 
-  <div id="modal-schedule-roi" class="modal">
-    <div class="modal-inner">
-      <div class="modal-header">
-        <div>
-          <div class="modal-title">Scheduling — time saved</div>
-        </div>
-        <button class="modal-close" onclick="closeModal('modal-schedule-roi')">✕</button>
-      </div>
-      <div class="modal-body">
-        <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
-          <li>CAO / dispatcher: ~30–45 min per day building and sending the schedule.</li>
-          <li>PMs: another ~10–15 min re-explaining where people were scheduled and why.</li>
-          <li>Field: 5–10 min of “where am I again / where’s the address / what tools?” per person.</li>
-        </ul>
-        <p>
-          This board centralizes all of that — schedule, addresses, JHAs, tool assignments — and
-          generates the messaging. The combined savings is easily 8–10 hours per week company-wide.
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeModal('modal-schedule-roi')">Close</button>
-      </div>
-    </div>
-  </div>
-
   <div id="modal-field-story" class="modal">
     <div class="modal-inner">
       <div class="modal-header">
-        <div class="modal-title">Field Ops story</div>
+        <div class="modal-title">Field story — what a foreman actually gets</div>
         <button class="modal-close" onclick="closeModal('modal-field-story')">✕</button>
       </div>
       <div class="modal-body">
         <p>
-          Right now, tools, JHAs, and daily production live in separate places (or not at all).
-          When something goes wrong — a near-miss, an upset client, missing tools — someone has to
-          reconstruct the night from memory.
-        </p>
-        <p>
-          This screen means:
+          When a foreman opens this on their phone or tablet, they see:
         </p>
         <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
-          <li>Every critical job has a JHA tied to it, with signatures and controls selected.</li>
-          <li>Every tool move is a quick tap, building a history you can actually trust.</li>
-          <li>Daily “goal vs actual” logs roll up to PM / Exec dashboards and change orders.</li>
+          <li>Where they’re going (job, hall, rack row) and when.</li>
+          <li>Which tools they’re responsible for (and which ones are “in question”).</li>
+          <li>The JHA controls, LOTOs, and signatures in one place.</li>
+          <li>The goal for the day — and a quick way to log what actually got done + blockers.</li>
+          <li>One tap to submit fuel/receipt/PO/timecard forms instead of hunting links.</li>
         </ul>
+        <p>
+          All of that feeds safety, PMs, finance, and leadership automatically instead of living in texts and notebooks.
+        </p>
       </div>
       <div class="modal-footer">
         <button class="btn" onclick="closeModal('modal-field-story')">Close</button>
@@ -1355,22 +2129,23 @@ JHAs & MOPs are attached to each job card in the app (same system).
   <div id="modal-hr-bamboo" class="modal">
     <div class="modal-inner">
       <div class="modal-header">
-        <div class="modal-title">HR & BambooHR link</div>
+        <div class="modal-title">How this layers on top of BambooHR</div>
         <button class="modal-close" onclick="closeModal('modal-hr-bamboo')">✕</button>
       </div>
       <div class="modal-body">
         <p>
-          In the real implementation, BambooHR would remain the source of truth for people,
-          dates, and base certifications.
-        </p>
-        <p>
-          This app would:
+          BambooHR already knows who people are and which base certs they hold.
+          This system doesn’t replace that — it adds:
         </p>
         <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
-          <li>Pull that data nightly (read-only).</li>
-          <li>Layer on field-level skills, JHA history, and task cards completed.</li>
-          <li>Show HR exactly who is both certified and field-ready for a given site / client.</li>
+          <li>Field skills (prints, conduit, terminations, LOTO experience) from real jobs.</li>
+          <li>Site history (which data centers, which clients, which halls).</li>
+          <li>JHA, LOTO, and training completions tied to specific work packages.</li>
         </ul>
+        <p>
+          HR can finally answer: “Who is safe, certified, and experienced enough to send to this job?”
+          with one click instead of three tools and a lot of guessing.
+        </p>
       </div>
       <div class="modal-footer">
         <button class="btn" onclick="closeModal('modal-hr-bamboo')">Close</button>
@@ -1378,123 +2153,305 @@ JHAs & MOPs are attached to each job card in the app (same system).
     </div>
   </div>
 
-  <div id="modal-training-teams" class="modal">
+  <div id="modal-roadmap" class="modal">
     <div class="modal-inner">
       <div class="modal-header">
-        <div class="modal-title">Training reminders — Teams example</div>
-        <button class="modal-close" onclick="closeModal('modal-training-teams')">✕</button>
+        <div class="modal-title">Phase 1 → Phase 2 roadmap (how you’d build this)</div>
+        <button class="modal-close" onclick="closeModal('modal-roadmap')">✕</button>
       </div>
       <div class="modal-body">
-        <pre style="background:#0c1123; padding:8px 10px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; font-size:0.78rem;">
-HR → Teams · 48 Electric · Training
-
-Next 30 days — expiring certs:
-
-• Diaz — NFPA 70E (expires 2025-01-22)
-  Suggested session: Mon 2025-01-12 · 09:00–11:00 · Chandler training room
-
-• Ramirez — NetSphere DC badge (expires 2025-02-14)
-  Suggested session: Tue 2025-01-20 · 13:00–15:00 · NetSphere site office
-
-• 3 others — OSHA 10 refresh within 90 days
-
-This app pre-builds these messages and calendar invites based on cert data + project load.
-        </pre>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeModal('modal-training-teams')">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="modal-api-story" class="modal">
-    <div class="modal-inner">
-      <div class="modal-header">
-        <div class="modal-title">API / integration story (for CAO / CEO)</div>
-        <button class="modal-close" onclick="closeModal('modal-api-story')">✕</button>
-      </div>
-      <div class="modal-body">
-        <p>
-          The point isn’t to replace Teams, Knowify, or Bamboo — it’s to make them feel like
-          one system that works the way 48 Electric actually runs jobs.
-        </p>
+        <p><strong>Phase 1 — 3–4 months</strong></p>
         <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
-          <li><strong>Teams:</strong> this app publishes schedules, JHAs, and training reminders into
-              the channels you already use.</li>
-          <li><strong>Knowify:</strong> job numbers and budgets come from Knowify; this app sends back
-              updated time, OT forecasts, and blockers.</li>
-          <li><strong>BambooHR:</strong> remains the people system; this app adds field-skills and
-              job-specific readiness for data center work.</li>
-          <li><strong>DCIM / BMS:</strong> gives change windows and alarms; this app applies that to
-              where you send crews and what MOPs / JHAs are required.</li>
+          <li>Build internal web app with:
+            <ul style="padding-left:18px;">
+              <li>Smart scheduling board + Teams posting.</li>
+              <li>Tool tracker for high-value tools + shrink analytics.</li>
+              <li>Daily “goal vs actual” logs + blocker patterns.</li>
+              <li>Simple rack pipeline view for one data hall.</li>
+              <li>Smart JHA/PTP builder feeding safety + client documentation.</li>
+              <li>LOTO tracker tied into JHAs and change windows.</li>
+              <li>Field forms hub (fuel, PO, receipts, timecard, material, tool checkout).</li>
+            </ul>
+          </li>
+          <li>Integrate read-only with Knowify (jobs) and BambooHR (people/certs).</li>
+          <li>Generate daily leadership email and PM dashboard from live data.</li>
         </ul>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeModal('modal-api-story')">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="modal-leadership" class="modal">
-    <div class="modal-inner">
-      <div class="modal-header">
-        <div class="modal-title">Daily leadership email (preview)</div>
-        <button class="modal-close" onclick="closeModal('modal-leadership')">✕</button>
-      </div>
-      <div class="modal-body">
-        <pre style="background:#0c1123; padding:8px 10px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; font-size:0.78rem;">
-Subject: 48 Electric — Phoenix DC overview (tonight)
-
-Exec summary:
-• 2 high-risk changes (UPS / STS) — all with JHAs, tools, and crews assigned.
-• Forecast OT tonight: 2.3 hrs (down from typical 7–8 hrs).
-• Tools missing >24 hrs: 3 (ladder L-12, Megger M-03, one temp power spider).
-
-PM highlights:
-• 7 jobs this week still lack committed dates.
-• 5 change orders have margin risk based on "goal vs actual" logs.
-• Stacked trades impacted 3 of 5 days this week (panels / feeders).
-
-HR & training:
-• 11 certs expiring ≤ 30 days (NFPA 70E, site access, OSHA refresh).
-• 4 apprentices flagged as "ready for more responsibility" based on tasks completed.
-
-Field-ready:
-• All night crews see: job, address, JHA, tools, and targets in a single app screen.
-• Teams messages are generated automatically from the same data.
-
-— Generated by the 48 Electric Ops + HR + Field system.
-        </pre>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeModal('modal-leadership')">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="modal-roi" class="modal">
-    <div class="modal-inner">
-      <div class="modal-header">
-        <div class="modal-title">Rough time / cost impact (demo numbers)</div>
-        <button class="modal-close" onclick="closeModal('modal-roi')">✕</button>
-      </div>
-      <div class="modal-body">
+        <p><strong>Phase 2 — next 3–6 months</strong></p>
         <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:18px;">
-          <li>Scheduling + messaging: 8–10 hrs/week → 2–3 hrs/week with automation.</li>
-          <li>HR + cert tracking: 2–3 hrs/week hunting in spreadsheets → 30 min/week.</li>
-          <li>PM reporting: 3–5 hrs/week building margin / risk reports by hand → 1 hr/week.</li>
+          <li>Expand rack pipeline to all active DC projects.</li>
+          <li>Add full change window risk engine from DCIM/BMS feeds.</li>
+          <li>Enhance apprentice skills matrix & promotion workflows.</li>
+          <li>Add margin early-warning view with Knowify budgets & hours.</li>
+          <li>Deeper finance integration for receipts/PO/T&M → job cost visibility.</li>
         </ul>
         <p>
-          Even at a blended $50/hr loaded cost, that’s easily $1,500–$2,000/month in recovered capacity,
-          plus better client outcomes and fewer “we didn’t know that was expiring” surprises.
+        line: “I’d like to move into an internal software/solutions role to own this Control Tower,
+          keep it aligned with how we actually build data center work, and keep finding these kinds of wins.”
         </p>
       </div>
       <div class="modal-footer">
-        <button class="btn" onclick="closeModal('modal-roi')">Close</button>
+        <button class="btn" onclick="closeModal('modal-roadmap')">Close</button>
       </div>
     </div>
   </div>
 
+  <!-- LOTO FORM MODAL -->
+  <div id="modal-loto-form" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">LOTO Form (demo layout)</div>
+        <button class="modal-close" onclick="closeModal('modal-loto-form')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+LOTO Tag #: ______________________
+Job / Site: ______________________
+Equipment: _______________________
+Location (panel/row/hall): _______
+Responsible person: _____________
+Date applied: ____________________
+Expected clear: _________________
+
+Energy sources (check all that apply):
+☐ Electrical    ☐ Mechanical
+☐ Hydraulic     ☐ Pneumatic
+☐ Other: ________________________
+
+Steps (high-level):
+1) Notify affected personnel
+2) Shut down equipment
+3) Isolate energy (breakers, valves, etc.)
+4) Apply locks/tags
+5) Verify zero energy
+6) Perform work
+7) Remove locks/tags and return to service
+
+This records into the LOTO tracker and links to JHAs / jobs in the Control Tower.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-loto-form')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUEL RECEIPT MODAL -->
+  <div id="modal-fuel" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Fuel Receipt Form (demo)</div>
+        <button class="modal-close" onclick="closeModal('modal-fuel')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+Truck #: ______________________
+Job / Site: __________________
+Date: ________________________
+Gallons: _____________________
+Total $: _____________________
+Vendor: ______________________
+Upload photo of receipt: [   ]
+
+In the real app this would submit into the existing 48 Electric fuel system,
+but with job/site context and analytics in the Control Tower.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-fuel')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREDIT CARD RECEIPT MODAL -->
+  <div id="modal-cc" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Credit Card Receipt Form (demo)</div>
+        <button class="modal-close" onclick="closeModal('modal-cc')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+Card holder: ___________________
+Job / Site: ____________________
+Vendor: ________________________
+Description: ___________________
+Amount: ________________________
+Date: __________________________
+Upload photo of receipt: [   ]
+PM approval: [   ]
+
+This ties directly to Knowify/job budgets and shows up in finance analytics.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-cc')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PO REQUEST MODAL -->
+  <div id="modal-po" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">PO Request (demo)</div>
+        <button class="modal-close" onclick="closeModal('modal-po')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+Job #: ________________________
+Vendor: _______________________
+Items / scope:
+  1) __________________________
+  2) __________________________
+  3) __________________________
+
+Estimated total: ______________
+Needed by: ____________________
+PM / Supervisor approval: [   ]
+
+A real build would push this PO into existing 48 Electric / Knowify workflows.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-po')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- T&M MODAL -->
+  <div id="modal-tm" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Time & Material Project Form (demo)</div>
+        <button class="modal-close" onclick="closeModal('modal-tm')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+Client: ______________________
+Job / Site: __________________
+Work description:
+  ____________________________
+  ____________________________
+
+Crew: ________________________
+Hours: _______________________
+Material used:
+  ____________________________
+  ____________________________
+
+Client onsite sign-off: [   ]
+Attach photos: [   ]
+
+This would feed T&M jobs in Knowify and be visible on the Control Tower.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-tm')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMECARD ADJUSTMENT MODAL -->
+  <div id="modal-timecard" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Timecard Adjustment (demo)</div>
+        <button class="modal-close" onclick="closeModal('modal-timecard')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+Employee: ____________________
+Date: ________________________
+Original entry:
+  Time in: ______  Time out: ______
+  Job: ________________
+
+Corrected entry:
+  Time in: ______  Time out: ______
+  Job: ________________
+
+Reason:
+  ____________________________
+  ____________________________
+
+Supervisor approval: [   ]
+
+Goes to payroll with a clean audit trail, visible to PMs if it affects their jobs.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-timecard')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATERIAL REQUEST MODAL -->
+  <div id="modal-material" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Material Request (demo)</div>
+        <button class="modal-close" onclick="closeModal('modal-material')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+Job / Site: ______________________
+Needed by (date/time): ___________
+Deliver to: ______________________
+
+Items:
+1) Qty ____ · Description ____________________
+2) Qty ____ · Description ____________________
+3) Qty ____ · Description ____________________
+
+Priority:
+☐ Normal      ☐ Urgent (holding up crew)
+
+Warehouse / PM notes:
+  ____________________________
+  ____________________________
+
+This feeds the warehouse queue and shows status back on the Control Tower.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-material')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOL CHECKOUT MODAL -->
+  <div id="modal-toolcheckout" class="modal">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">Tool Checkout Form (demo)</div>
+        <button class="modal-close" onclick="closeModal('modal-toolcheckout')">✕</button>
+      </div>
+      <div class="modal-body">
+        <pre>
+Tool: __________________________
+Tool ID: _______________________
+Employee: ______________________
+Job / Site: ____________________
+Checkout date/time: ____________
+Expected return: _______________
+
+Condition on checkout:
+☐ OK      ☐ Needs attention
+
+Return date/time: _____________
+Condition on return:
+☐ OK      ☐ Damaged  (describe) ____________
+
+This updates the tool tracker and shrink analytics automatically.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-toolcheckout')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -------------------------------------------------------- -->
   <script>
     // Sidebar navigation
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -1504,10 +2461,15 @@ Field-ready:
         const target = item.dataset.target;
         document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
         document.getElementById(target).classList.add('active');
+        // Close sidebar on mobile after navigation
+        if (window.innerWidth <= 720) {
+          const sidebar = document.querySelector('.sidebar');
+          if (sidebar) sidebar.style.display = 'none';
+        }
       });
     });
 
-    // Persona switching for dashboard
+    // Persona switching
     document.querySelectorAll('.persona-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
@@ -1522,10 +2484,229 @@ Field-ready:
       });
     });
 
-    // Drag & drop for scheduling
+    // Capture modal text templates
+    const leadershipPreEl = document.querySelector('#modal-leadership pre');
+    const leadershipPreTemplate = leadershipPreEl ? leadershipPreEl.textContent : '';
+    const teamsPreEl = document.querySelector('#modal-teams pre');
+    const teamsPreTemplate = teamsPreEl ? teamsPreEl.textContent : '';
+    const pitchPreEl = document.querySelector('#modal-pitch pre');
+    const pitchPreTemplate = pitchPreEl ? pitchPreEl.textContent : '';
+
+    // Data ---------------------------------------------------------
+    const racks = [
+      { id: 'R-1-01', client: 'CloudCore', hall: 'H3', row: 'A', stage: 'wired', value: 4200 },
+      { id: 'R-1-02', client: 'CloudCore', hall: 'H3', row: 'A', stage: 'wired', value: 4200 },
+      { id: 'R-1-03', client: 'CloudCore', hall: 'H3', row: 'B', stage: 'qc', value: 4200 },
+      { id: 'R-1-04', client: 'NetSphere', hall: 'H1', row: 'C', stage: 'ready', value: 4800 },
+      { id: 'R-1-05', client: 'NetSphere', hall: 'H1', row: 'C', stage: 'ready', value: 4800 },
+      { id: 'R-1-06', client: 'NetSphere', hall: 'H1', row: 'D', stage: 'energized', value: 5000 },
+      { id: 'R-1-07', client: 'CloudCore', hall: 'H2', row: 'E', stage: 'qc', value: 4300 },
+      { id: 'R-1-08', client: 'CloudCore', hall: 'H2', row: 'E', stage: 'energized', value: 4300 }
+    ];
+
+    const changeWindows = [
+      {
+        time: '21:00–23:30',
+        system: 'UPS-B bypass & battery test',
+        hall: 'OC-2 · HALL 3 (CloudCore Gold)',
+        risk: 'High',
+        reason: 'New apprentice + UPS work in Gold hall + simultaneous work in adjacent row'
+      },
+      {
+        time: '07:00–13:00',
+        system: 'PDU-3 IR scan & torque',
+        hall: 'CP-1 · HALL 1/2 (NetSphere)',
+        risk: 'Medium',
+        reason: 'Normal maintenance window; stacked trades noted last week'
+      },
+      {
+        time: '18:30–21:00',
+        system: 'Gen-3 load bank test',
+        hall: 'GY-1 · gen yard (CloudCore)',
+        risk: 'Medium',
+        reason: 'Night work; good experience on crew; weather risk if storms'
+      }
+    ];
+
+    const overviewSites = [
+      { site: 'OC-2', crew: 9, jobs: 3 },
+      { site: 'CP-1', crew: 8, jobs: 2 },
+      { site: 'GY-1', crew: 7, jobs: 1 }
+    ];
+    const jobHealth = { green: 4, yellow: 2, red: 1 };
+
+    const toolLossItems = [
+      { name: 'Ladder L-12', status: 'ask', daysMissing: 1, cost: 350 },
+      { name: 'Megger M-03', status: 'missing', daysMissing: 3, cost: 1200 }
+    ];
+
+    // LOTO points (demo)
+    const lotoPoints = [
+      {
+        tag: 'LOTO-132',
+        site: 'OC-2 · H3',
+        equipment: 'UPS-B output breaker',
+        owner: 'Diaz',
+        status: 'Active',
+        started: '20:05',
+        expectedClear: '23:15'
+      },
+      {
+        tag: 'LOTO-129',
+        site: 'CP-1 · H1',
+        equipment: 'PDU-3 primary feed',
+        owner: 'Ramirez',
+        status: 'Clearing',
+        started: '07:05',
+        expectedClear: '12:45'
+      },
+      {
+        tag: 'LOTO-118',
+        site: 'GY-1 · yard',
+        equipment: 'Gen-3 main breaker',
+        owner: 'Lewis',
+        status: 'Cleared',
+        started: '18:00',
+        expectedClear: '21:00'
+      }
+    ];
+
+    // Rework / failed inspections (fake demo)
+    const reworkItems = [
+      {
+        job: 'OC-2 · H3',
+        issue: 'Panel labeling failed QC',
+        hours: 6,
+        cost: 330,
+        cause: 'Labeling / documentation'
+      },
+      {
+        job: 'CP-1 · H1',
+        issue: 'Conduit support spacing rework',
+        hours: 8,
+        cost: 440,
+        cause: 'Install standards'
+      },
+      {
+        job: 'GY-1 · yard',
+        issue: 'Gen load bank set-up redo',
+        hours: 5,
+        cost: 275,
+        cause: 'Incomplete pre-task planning'
+      },
+      {
+        job: 'OC-2 · H2',
+        issue: 'IR scan access issues',
+        hours: 4,
+        cost: 220,
+        cause: 'Stacked trades / coordination'
+      },
+      {
+        job: 'CP-1 · H2',
+        issue: 'Feeder lug re-termination',
+        hours: 7,
+        cost: 385,
+        cause: 'Torque / terminations'
+      }
+    ];
+
+    let reworkSavingsAnnual = 0;
+    let travelOtSavingsAnnual = 0;
+
+    // Rack board ---------------------------------------------------
+    function renderRackBoard() {
+      const board = document.getElementById('rackBoard');
+      const stages = ['wired', 'qc', 'ready', 'energized'];
+      const stageTitles = {
+        wired: 'Wired',
+        qc: 'QC / IR / label checks',
+        ready: 'Ready to energize',
+        energized: 'Energized & billable'
+      };
+      board.innerHTML = '';
+      let readyCount = 0;
+      let readyValue = 0;
+
+      stages.forEach(stage => {
+        const col = document.createElement('div');
+        col.className = 'rack-column';
+        const stageItems = racks.filter(r => r.stage === stage);
+        const count = stageItems.length;
+        let subtotal = stageItems.reduce((sum, r) => sum + r.value, 0);
+        if (stage === 'ready' || stage === 'energized') {
+          readyCount += count;
+          readyValue += subtotal;
+        }
+        col.innerHTML = `
+          <h4>${stageTitles[stage]} (${count})</h4>
+          <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">
+            Est. value: $${subtotal.toLocaleString()}
+          </div>
+        `;
+        stageItems.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'rack-item';
+          card.innerHTML = `
+            <div class="rack-id">${item.id} · ${item.client}</div>
+            <div class="rack-meta">Hall ${item.hall} · Row ${item.row}</div>
+          `;
+          col.appendChild(card);
+        });
+        board.appendChild(col);
+      });
+
+      document.getElementById('racksReadyCount').textContent = readyCount;
+      document.getElementById('racksReadyValue').textContent = readyValue.toLocaleString();
+    }
+
+    // Change windows -----------------------------------------------
+    function renderChangeWindows() {
+      const tbody = document.querySelector('#changeTable tbody');
+      tbody.innerHTML = '';
+      let highRisk = 0;
+      changeWindows.forEach(win => {
+        if (win.risk === 'High') highRisk++;
+        const tr = document.createElement('tr');
+        const riskClass = win.risk === 'High' ? 'danger' : (win.risk === 'Medium' ? 'warn' : 'success');
+        tr.innerHTML = `
+          <td>${win.time}</td>
+          <td>${win.system}</td>
+          <td>${win.hall}</td>
+          <td><span class="badge ${riskClass}">${win.risk}</span></td>
+          <td>${win.reason}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('highRiskCount').textContent = highRisk;
+    }
+
+    // Overview analytics -------------------------------------------
+    function initOverviewAnalytics() {
+      const totalCrew = overviewSites.reduce((sum, s) => sum + s.crew, 0);
+      document.getElementById('totalCrewCount').textContent = totalCrew;
+      document.getElementById('headcountBreakdown').textContent =
+        overviewSites.map(s => `${s.site}: ${s.crew} crew on ${s.jobs} jobs`).join(' · ');
+
+      document.getElementById('jobsGreen').textContent = jobHealth.green;
+      document.getElementById('jobsYellow').textContent = jobHealth.yellow;
+      document.getElementById('jobsRed').textContent = jobHealth.red;
+
+      const totalJobs = jobHealth.green + jobHealth.yellow + jobHealth.red;
+      const pctGreen = totalJobs ? (jobHealth.green / totalJobs * 100) : 0;
+      const bar = document.getElementById('jobsGreenBar');
+      if (bar) bar.style.width = pctGreen.toFixed(0) + '%';
+
+      document.getElementById('openJhasOverview').textContent = 4;
+      document.getElementById('certExpiringOverview').textContent = 11;
+    }
+
+    // Scheduling + OT ----------------------------------------------
     const draggables = document.querySelectorAll('.draggable');
     const dropzones = document.querySelectorAll('.dropzone');
     const scheduleOutput = document.getElementById('scheduleOutput');
+
+    const assignments = { ocotillo: [], cloudpark: [], goodyear: [] };
+    const expectedSiteByJob = { ocotillo: 'OC-2', cloudpark: 'CP-1', goodyear: 'GY-1' };
 
     draggables.forEach(el => {
       el.addEventListener('dragstart', e => {
@@ -1533,74 +2714,554 @@ Field-ready:
       });
     });
 
-    const assignments = {
-      ocotillo: [],
-      cloudpark: [],
-      goodyear: []
-    };
-
     dropzones.forEach(zone => {
       zone.addEventListener('dragover', e => e.preventDefault());
       zone.addEventListener('drop', e => {
         e.preventDefault();
         const text = e.dataTransfer.getData('text/plain');
         if (!text) return;
-        const clone = document.createElement('div');
-        clone.textContent = text;
-        clone.className = 'draggable';
-        clone.draggable = false;
-        zone.appendChild(clone);
 
         const jobKey = zone.dataset.job;
-        if (jobKey && assignments[jobKey]) {
-          if (!assignments[jobKey].includes(text)) {
-            assignments[jobKey].push(text);
-          }
+        const existing = Array.from(zone.querySelectorAll('.draggable')).map(d => d.textContent.trim());
+        if (!existing.includes(text)) {
+          const clone = document.createElement('div');
+          clone.textContent = text;
+          clone.className = 'draggable';
+          clone.draggable = false;
+          zone.appendChild(clone);
+        }
+
+        if (jobKey && assignments[jobKey] && !assignments[jobKey].includes(text)) {
+          assignments[jobKey].push(text);
         }
         updateScheduleOutput();
+        computeTravelOtAnalytics();
       });
     });
 
     function updateScheduleOutput() {
       const lines = [];
-      lines.push('Auto-generated preview (would send to Teams / SMS):');
-      lines.push('');
       if (assignments.ocotillo.length) {
-        lines.push('Ocotillo · UPS-B bypass & battery test (CHG-3217)');
+        lines.push('Ocotillo — UPS-B bypass & battery test (CHG-3217)');
         lines.push('Crew: ' + assignments.ocotillo.join(', '));
-        lines.push('• 20:00–23:30 · HALL 3 · CloudCore (Gold)');
+        lines.push('Time: 20:00–23:30 · HALL 3 · CloudCore');
         lines.push('');
       }
       if (assignments.cloudpark.length) {
-        lines.push('Mesa CloudPark · PDU-3 IR scan & torque (CHG-3224)');
+        lines.push('Mesa CloudPark — PDU-3 IR scan & torque (CHG-3224)');
         lines.push('Crew: ' + assignments.cloudpark.join(', '));
-        lines.push('• 07:00–13:00 · HALL 1/2 · NetSphere');
+        lines.push('Time: 07:00–13:00 · HALL 1/2 · NetSphere');
         lines.push('');
       }
       if (assignments.goodyear.length) {
-        lines.push('Goodyear Edge · Gen-3 load bank test (CHG-3230)');
+        lines.push('Goodyear Edge — Gen-3 load bank test (CHG-3230)');
         lines.push('Crew: ' + assignments.goodyear.join(', '));
-        lines.push('• 18:30–21:00 · yard · CloudCore');
+        lines.push('Time: 18:30–21:00 · gen yard · CloudCore');
         lines.push('');
       }
-      if (!lines.length || lines.length <= 2) {
+
+      if (!lines.length) {
         scheduleOutput.innerHTML =
-          '<strong>Auto-generated: Schedule messages & Teams summary</strong><br />' +
-          'Drag a few names onto jobs and this area updates to show the exact text that would go ' +
-          'to Teams or SMS. In the real app, this would be one click to send instead of 20 minutes ' +
-          'of manual formatting.';
+          '<strong>Auto-generated: schedule text</strong><br />' +
+          'Drag a few names onto jobs and this updates with exactly what would go to Teams/SMS.';
       } else {
         scheduleOutput.innerHTML =
-          '<pre style="white-space:pre-wrap; font-size:0.78rem; margin:0;">' +
-          lines.join('\\n') +
-          '</pre>';
+          '<pre>' + lines.join('\n') + '</pre>';
+      }
+
+      // Update Teams modal preview from template
+      if (teamsPreEl && teamsPreTemplate) {
+        let text = teamsPreTemplate;
+        text = text.replace(/\[crew-ocotillo\]/g, assignments.ocotillo.join(', ') || '—');
+        text = text.replace(/\[crew-cloudpark\]/g, assignments.cloudpark.join(', ') || '—');
+        text = text.replace(/\[crew-goodyear\]/g, assignments.goodyear.join(', ') || '—');
+        teamsPreEl.textContent = text;
       }
     }
 
-    // Modal helpers
+    function parseHomeSite(text) {
+      const parts = text.split('·');
+      if (parts.length >= 3) return parts[2].trim();
+      return 'swing';
+    }
+
+    function computeTravelOtAnalytics() {
+      let currentHours = 0;
+      const allWorkers = [];
+      Object.keys(assignments).forEach(jobKey => {
+        const expected = expectedSiteByJob[jobKey] || '';
+        assignments[jobKey].forEach(person => {
+          const home = parseHomeSite(person);
+          allWorkers.push(person);
+          if (expected && home === expected) {
+            currentHours += 0.25;  // near-by
+          } else {
+            currentHours += 0.75;  // cross-town
+          }
+        });
+      });
+
+      const optimizedHours = allWorkers.length * 0.25;
+      const rate = parseFloat(document.getElementById('travelHourlyRate').value) || 55;
+      const weeklySaved = Math.max(0, currentHours - optimizedHours);
+      const monthlySaved = weeklySaved * rate * 4;
+      const annualSaved = weeklySaved * rate * 52;
+      travelOtSavingsAnnual = annualSaved;
+
+      document.getElementById('travelOtCurrent').textContent = currentHours.toFixed(1);
+      document.getElementById('travelOtOptimized').textContent = optimizedHours.toFixed(1);
+      document.getElementById('travelOtSavingsHours').textContent = weeklySaved.toFixed(1);
+      document.getElementById('travelOtSavingsMoney').textContent = Math.round(monthlySaved).toLocaleString();
+      document.getElementById('pmTravelOt').textContent = currentHours.toFixed(1);
+      document.getElementById('pmTravelOtOptimized').textContent = optimizedHours.toFixed(1);
+
+      initOpportunityScorecard();
+      updateDynamicPitch();
+    }
+
+    document.getElementById('travelHourlyRate').addEventListener('input', () => {
+      computeTravelOtAnalytics();
+    });
+
+    // Tool loss analytics ------------------------------------------
+    function initToolLoss() {
+      let quarterLoss = 0;
+      toolLossItems.forEach(item => {
+        if (item.status === 'missing' && item.daysMissing >= 3) {
+          quarterLoss += item.cost;
+        }
+        if (item.status === 'ask') {
+          quarterLoss += item.cost * 0.3;
+        }
+      });
+      const annualLoss = quarterLoss * 4;
+      document.getElementById('toolLossCurrent').textContent = Math.round(quarterLoss).toLocaleString();
+      document.getElementById('toolLossAnnual').textContent = Math.round(annualLoss).toLocaleString();
+      document.getElementById('toolLossNote').textContent =
+        `If this pattern kept up, we’d quietly lose about $${Math.round(annualLoss).toLocaleString()} in tools per year.`;
+    }
+
+    // Blocker analytics --------------------------------------------
+    function initBlockers() {
+      const blockerCounts = {};
+      const rows = document.querySelectorAll('#productionTable tbody tr');
+      rows.forEach(row => {
+        const blocker = row.cells[3].textContent.trim();
+        if (!blocker || blocker === '—') return;
+        blockerCounts[blocker] = (blockerCounts[blocker] || 0) + 1;
+      });
+
+      const sorted = Object.entries(blockerCounts).sort((a, b) => b[1] - a[1]);
+      const tbody = document.getElementById('blockerTableBody');
+      tbody.innerHTML = '';
+      sorted.forEach(([name, count]) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${name}</td><td>${count}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      const summary = sorted.slice(0, 2).map(([n, c]) => `${n} (${c})`).join(', ');
+      document.getElementById('blockerSummary').textContent =
+        summary ? `Top recurring blockers this week: ${summary}.` : 'No recurring blockers logged this week.';
+      document.getElementById('pmTopBlocker').textContent = sorted[0] ? sorted[0][0] : 'None';
+
+      initOpportunityScorecard();
+    }
+
+    // What-if ROI --------------------------------------------------
+    function updateWhatIf() {
+      const rate = parseFloat(document.getElementById('whatIfRate').value) || 55;
+      const hours = parseFloat(document.getElementById('whatIfHours').value) || 10;
+      const weekly = rate * hours;
+      const monthly = weekly * 4;
+      const annual = weekly * 52;
+      document.getElementById('whatIfMonthly').textContent = Math.round(monthly).toLocaleString();
+      document.getElementById('whatIfAnnual').textContent = Math.round(annual).toLocaleString();
+      document.getElementById('overviewMonthlySavings').textContent = (hours * 4).toFixed(1);
+      document.getElementById('overviewMonthlySavingsMoney').textContent = Math.round(monthly).toLocaleString();
+
+      initOpportunityScorecard();
+      updateDynamicPitch();
+    }
+
+    document.getElementById('whatIfRate').addEventListener('input', updateWhatIf);
+    document.getElementById('whatIfHours').addEventListener('input', updateWhatIf);
+
+    // JHA / PTP builder -------------------------------------------
+    const jhaHazardControls = {
+      'Energized gear nearby': 'Test-before-touch, verify absence of voltage, apply LO/TO with site tech sign-off.',
+      'Battery strings / DC energy': 'Use insulated tools, maintain clearances, second-person verification, remove metal jewelry.',
+      'Trip hazards / cords in aisles': 'Barricade cords, keep aisles clear, define walk paths, housekeeping checks.',
+      'Hot aisle / heat stress': 'Limit exposure time, rotate tasks, hydrate, use cooling PPE if available.',
+      'Heavy lifts / awkward pulls': 'Use team lifts or lift devices, plan path, keep body close to load.',
+      'Confined / tight aisles': 'Plan egress, stage tools/materials outside, limit people in the space.',
+      'Noise / gen exhaust': 'Hearing protection, exhaust routing, upwind positioning, monitor CO alarms.',
+      'Labeling / misidentification risk': 'Verify panel and circuit labeling, cross-check prints, peer check before energizing.',
+      'Working at height / ladders': 'Inspect ladders, maintain three points of contact, use fall protection where required.'
+    };
+
+    const jhaTaskHazards = {
+      'UPS bypass & battery test': [
+        'Energized gear nearby',
+        'Battery strings / DC energy',
+        'Trip hazards / cords in aisles',
+        'Labeling / misidentification risk'
+      ],
+      'Rack energization in DC hall': [
+        'Energized gear nearby',
+        'Trip hazards / cords in aisles',
+        'Hot aisle / heat stress',
+        'Labeling / misidentification risk'
+      ],
+      'PDU IR scan & torque': [
+        'Energized gear nearby',
+        'Working at height / ladders',
+        'Trip hazards / cords in aisles'
+      ],
+      'Feeder pull in data hall': [
+        'Heavy lifts / awkward pulls',
+        'Trip hazards / cords in aisles',
+        'Confined / tight aisles'
+      ],
+      'Panel terminations / lugs': [
+        'Energized gear nearby',
+        'Labeling / misidentification risk',
+        'Trip hazards / cords in aisles'
+      ],
+      'Gen load bank test': [
+        'Noise / gen exhaust',
+        'Heavy lifts / awkward pulls',
+        'Trip hazards / cords in aisles'
+      ]
+    };
+
+    const jhaSiteNotes = {
+      'Ocotillo — HALL 3 (CloudCore Gold)': 'CloudCore Gold hall: strict change windows, client MOP sign-off required, redundancy must be maintained.',
+      'Mesa CloudPark — HALL 1/2 (NetSphere)': 'NetSphere CP-1: coordinate with site tech, adhere to hot/cold aisle standards, badge access required.',
+      'Goodyear Edge — Gen yard (CloudCore)': 'Gen yard: outdoor work with noise/exhaust, check weather and lighting; coordinate with facilities for yard access.'
+    };
+
+    function renderJhaHazards() {
+      const taskSelect = document.getElementById('jhaTaskSelect');
+      const hazardContainer = document.getElementById('jhaHazardsContainer');
+      if (!taskSelect || !hazardContainer) return;
+
+      const task = taskSelect.value;
+      const baseHazards = jhaTaskHazards[task] || [];
+      const hazardsSet = new Set(baseHazards);
+
+      hazardContainer.innerHTML = '';
+      hazardsSet.forEach(h => {
+        const label = document.createElement('label');
+        label.className = 'jha-check';
+        label.innerHTML = `
+          <input type="checkbox" data-hazard="${h}" checked />
+          <span>${h}</span>
+        `;
+        hazardContainer.appendChild(label);
+      });
+
+      if (!hazardsSet.size) {
+        hazardContainer.innerHTML = '<span class="note">No template hazards defined for this task (demo only).</span>';
+      }
+    }
+
+    function generateJha() {
+      const siteSelect = document.getElementById('jhaSiteSelect');
+      const taskSelect = document.getElementById('jhaTaskSelect');
+      const hazardContainer = document.getElementById('jhaHazardsContainer');
+      const preview = document.getElementById('jhaPreview');
+      if (!siteSelect || !taskSelect || !hazardContainer || !preview) return;
+
+      const site = siteSelect.value;
+      const task = taskSelect.value;
+      const hazards = [];
+      hazardContainer.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+        if (chk.checked) hazards.push(chk.dataset.hazard);
+      });
+
+      const night = document.getElementById('jhaNightWork').checked;
+      const newApprentice = document.getElementById('jhaNewApprentice').checked;
+      const critical = document.getElementById('jhaClientCritical').checked;
+
+      let riskScore = 1;
+      if (hazards.length >= 4) riskScore++;
+      if (night) riskScore++;
+      if (newApprentice) riskScore++;
+      if (critical) riskScore++;
+
+      let riskLabel = 'Low';
+      if (riskScore >= 4) riskLabel = 'High';
+      else if (riskScore >= 2) riskLabel = 'Medium';
+
+      const siteNote = jhaSiteNotes[site] || '';
+
+      const lines = [];
+      lines.push(`Job site: ${site}`);
+      lines.push(`Task: ${task}`);
+      lines.push(`Risk level (auto-assessed): ${riskLabel}`);
+      if (siteNote) {
+        lines.push(`Site notes: ${siteNote}`);
+      }
+      lines.push('');
+      lines.push('Crew:');
+      lines.push('  • Foreman: ______________________________');
+      lines.push('  • Journeyman(s): ________________________');
+      lines.push('  • Apprentice(s): ________________________');
+      lines.push('');
+      lines.push('Hazards & controls:');
+
+      if (!hazards.length) {
+        lines.push('  (No hazards selected — in a real system this would not be allowed.)');
+      } else {
+        hazards.forEach(h => {
+          const control = jhaHazardControls[h] || 'Define controls with crew lead.';
+          lines.push(`  • Hazard: ${h}`);
+          lines.push(`    Controls: ${control}`);
+        });
+      }
+
+      lines.push('');
+      lines.push('PPE / equipment:');
+      lines.push('  ☐ Basic PPE (hard hat, safety glasses, gloves, FR as required)');
+      lines.push('  ☐ Task-specific PPE (arc-rated gear, hearing, etc.)');
+      lines.push('  ☐ Required tools & testers (IR camera, megger, load bank, etc.)');
+      lines.push('');
+      lines.push('Crew briefing & signatures:');
+      lines.push('  Lead: _____________________   Date: ____________');
+      lines.push('  Crew: _____________________   Date: ____________');
+      lines.push('         _____________________   Date: ____________');
+      lines.push('         _____________________   Date: ____________');
+
+      preview.textContent = lines.join('\n');
+    }
+
+    function initJhaBuilder() {
+      const siteSelect = document.getElementById('jhaSiteSelect');
+      const taskSelect = document.getElementById('jhaTaskSelect');
+      if (!siteSelect || !taskSelect) return;
+      taskSelect.addEventListener('change', () => {
+        renderJhaHazards();
+        generateJha();
+      });
+      siteSelect.addEventListener('change', generateJha);
+      document.getElementById('jhaNightWork').addEventListener('change', generateJha);
+      document.getElementById('jhaNewApprentice').addEventListener('change', generateJha);
+      document.getElementById('jhaClientCritical').addEventListener('change', generateJha);
+
+      renderJhaHazards();
+      generateJha();
+    }
+
+    // Rework Radar -------------------------------------------------
+    function initRework() {
+      const tbody = document.getElementById('reworkTableBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = '';
+      let totalHours = 0;
+      let totalCost = 0;
+      const causeCounts = {};
+
+      reworkItems.forEach(item => {
+        totalHours += item.hours;
+        totalCost += item.cost;
+        causeCounts[item.cause] = (causeCounts[item.cause] || 0) + 1;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.job}</td>
+          <td>${item.issue}</td>
+          <td>${item.hours}</td>
+          <td>$${item.cost.toLocaleString()}</td>
+          <td>${item.cause}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const hoursEl = document.getElementById('reworkHoursQuarter');
+      const costEl = document.getElementById('reworkCostQuarter');
+      const savingsEl = document.getElementById('reworkSavingsAnnual');
+
+      if (hoursEl) hoursEl.textContent = totalHours.toString();
+      if (costEl) costEl.textContent = Math.round(totalCost).toLocaleString();
+
+      const annualCost = totalCost * 4;
+      reworkSavingsAnnual = Math.round(annualCost * 0.3);
+      if (savingsEl) savingsEl.textContent = reworkSavingsAnnual.toLocaleString();
+
+      const causeList = document.getElementById('reworkCausesList');
+      if (causeList) {
+        causeList.innerHTML = '';
+        const sorted = Object.entries(causeCounts).sort((a, b) => b[1] - a[1]);
+        sorted.forEach(([cause, count]) => {
+          const li = document.createElement('li');
+          li.textContent = `${cause} (${count})`;
+          causeList.appendChild(li);
+        });
+      }
+
+      initOpportunityScorecard();
+    }
+
+    // LOTO tracker -------------------------------------------------
+    function initLoto() {
+      const board = document.getElementById('lotoBoard');
+      const summary = document.getElementById('lotoSummary');
+      if (!board) return;
+      board.innerHTML = '';
+
+      let activeCount = 0;
+      lotoPoints.forEach((pt, idx) => {
+        if (pt.status === 'Active' || pt.status === 'Clearing') activeCount++;
+
+        const statusClass =
+          pt.status === 'Active' ? 'danger' :
+          pt.status === 'Clearing' ? 'warn' : 'success';
+
+        const btnLabel =
+          pt.status === 'Active' ? 'Mark as clearing' :
+          pt.status === 'Clearing' ? 'Clear LOTO' : '';
+
+        const card = document.createElement('div');
+        card.className = 'loto-card';
+        card.innerHTML = `
+          <div class="loto-header">
+            <div>
+              <div class="loto-tag">${pt.tag}</div>
+              <div class="badge ${statusClass}" style="margin-top:2px;">${pt.status}</div>
+            </div>
+            <div class="loto-lock"></div>
+          </div>
+          <div class="loto-meta">
+            Site: ${pt.site}<br/>
+            Equipment: ${pt.equipment}<br/>
+            Owner: ${pt.owner}<br/>
+            Started: ${pt.started} · Clear: ${pt.expectedClear}
+          </div>
+          ${
+            btnLabel
+              ? `<button class="btn" style="font-size:0.7rem; padding:4px 8px;" onclick="advanceLotoStatus(${idx})">${btnLabel}</button>`
+              : '<div class="note" style="margin-top:4px;">Closed — archived for audit.</div>'
+          }
+        `;
+        board.appendChild(card);
+      });
+
+      if (summary) {
+        summary.textContent =
+          `Active LOTOs: ${activeCount}. This view replaces guessing and texts about what’s locked where.`;
+      }
+      const overviewEl = document.getElementById('lotoActiveOverview');
+      if (overviewEl) overviewEl.textContent = activeCount.toString();
+    }
+
+    function advanceLotoStatus(idx) {
+      const pt = lotoPoints[idx];
+      if (!pt) return;
+      if (pt.status === 'Active') pt.status = 'Clearing';
+      else if (pt.status === 'Clearing') pt.status = 'Cleared';
+      initLoto();
+    }
+
+    // Opportunity scorecard ---------------------------------------
+    function initOpportunityScorecard() {
+      const tbody = document.getElementById('opportunityTableBody');
+      const noteEl = document.getElementById('opportunityNote');
+      if (!tbody) return;
+
+      const whatIfAnnualEl = document.getElementById('whatIfAnnual');
+      const adminAnnual = whatIfAnnualEl
+        ? parseInt(whatIfAnnualEl.textContent.replace(/,/g, ''), 10) || 0
+        : 0;
+
+      const toolAnnualEl = document.getElementById('toolLossAnnual');
+      const toolAnnualRaw = toolAnnualEl
+        ? parseInt(toolAnnualEl.textContent.replace(/,/g, ''), 10) || 0
+        : 0;
+      const toolSavingsAnnual = Math.round(toolAnnualRaw * 0.4);
+
+      const travelAnnual = Math.round(travelOtSavingsAnnual || 0);
+      const reworkAnnual = Math.round(reworkSavingsAnnual || 0);
+
+      const rows = [
+        {
+          area: 'Admin & coordination time',
+          assumption: '10 hrs/week saved across CAO / PM / HR',
+          value: adminAnnual
+        },
+        {
+          area: 'Travel-based overtime',
+          assumption: 'Crew/site matching + fewer cross-town drives',
+          value: travelAnnual
+        },
+        {
+          area: 'Tool shrink (lost / missing equipment)',
+          assumption: 'Recover ~40% of current annual loss',
+          value: toolSavingsAnnual
+        },
+        {
+          area: 'Rework & failed inspections',
+          assumption: 'Cut rework by ~30% through standards + JHAs + task cards',
+          value: reworkAnnual
+        }
+      ];
+
+      tbody.innerHTML = '';
+      let total = 0;
+      rows.forEach(row => {
+        total += row.value;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.area}</td>
+          <td>${row.assumption}</td>
+          <td>$${row.value.toLocaleString()}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      if (noteEl) {
+        const conservative = Math.round(total * 0.5);
+        noteEl.textContent =
+          `Total potential savings if we execute well: ~$${total.toLocaleString()}/year. ` +
+          `Even if we only capture half of that (~$${conservative.toLocaleString()}/year), ` +
+          `that more than covers the cost of a dedicated internal developer to own this app.`;
+      }
+    }
+
+    // Dynamic pitch numbers ---------------------------------------
+    function updateDynamicPitch() {
+      if (!pitchPreEl || !pitchPreTemplate) return;
+      const whatIfAnnualText = document.getElementById('whatIfAnnual').textContent || '0';
+      let text = pitchPreTemplate;
+      text = text.replace(/\[\$whatIfAnnual\]/g, '$' + whatIfAnnualText);
+      text = text.replace(/\$whatIfAnnual/g, '$' + whatIfAnnualText);
+      pitchPreEl.textContent = text;
+    }
+
+    // Modals -------------------------------------------------------
     function openModal(id) {
       const el = document.getElementById(id);
       if (el) el.style.display = 'flex';
+
+      if (id === 'modal-leadership' && leadershipPreEl && leadershipPreTemplate) {
+        let text = leadershipPreTemplate;
+        text = text.replace(/\[racksReadyCount\]/g, document.getElementById('racksReadyCount').textContent);
+        text = text.replace(/\[racksReadyValue\]/g, document.getElementById('racksReadyValue').textContent);
+        text = text.replace(/\[highRiskCount\]/g, document.getElementById('highRiskCount').textContent);
+        text = text.replace(/\[overviewMonthlySavings\]/g, document.getElementById('overviewMonthlySavings').textContent);
+        text = text.replace(/\[overviewMonthlySavingsMoney\]/g, document.getElementById('overviewMonthlySavingsMoney').textContent);
+        text = text.replace(/\[travelOtCurrent\]/g, document.getElementById('travelOtCurrent').textContent);
+        text = text.replace(/\[travelOtOptimized\]/g, document.getElementById('travelOtOptimized').textContent);
+        text = text.replace(/\[toolLossAnnual\]/g, document.getElementById('toolLossAnnual').textContent);
+        text = text.replace(/\[pmTopBlocker\]/g, document.getElementById('pmTopBlocker').textContent);
+        text = text.replace(/\[lotoActiveOverview\]/g, document.getElementById('lotoActiveOverview').textContent);
+        leadershipPreEl.textContent = text;
+      }
+
+      if (id === 'modal-pitch') {
+        updateDynamicPitch();
+      }
     }
 
     function closeModal(id) {
@@ -1608,8 +3269,35 @@ Field-ready:
       if (el) el.style.display = 'none';
     }
 
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      if (!sidebar) return;
+      if (sidebar.style.display === 'block') {
+        sidebar.style.display = 'none';
+      } else {
+        sidebar.style.display = 'block';
+      }
+    }
+
     window.openModal = openModal;
     window.closeModal = closeModal;
+    window.advanceLotoStatus = advanceLotoStatus;
+    window.toggleSidebar = toggleSidebar;
+
+    // Init everything ----------------------------------------------
+    renderRackBoard();
+    renderChangeWindows();
+    initOverviewAnalytics();
+    updateScheduleOutput();
+    computeTravelOtAnalytics();
+    initToolLoss();
+    initBlockers();
+    updateWhatIf();
+    initJhaBuilder();
+    initRework();
+    initLoto();
+    initOpportunityScorecard();
+    updateDynamicPitch();
   </script>
 </body>
 </html>
